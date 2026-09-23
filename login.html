@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - StudyMate</title>
+</head>
+<body>
+    <h1>StudyMate</h1>
+
+    <h2>Login</h2>
+
+    <form>
+
+        <label>Email:</label>
+        <br>
+        <input type="email" required>
+
+        <br><br>
+
+        <label>Password:</label>
+        <br>
+        <input type="password" required>
+
+        <br><br>
+
+        <button type="button" onclick="login()">
+            Login
+        </button>
+
+    </form>
+
+    <p>
+        Don't have an account?
+        <a href="register.html">Create an account</a>
+    </p>
+
+    <script>
+        function login() {
+            alert("Login successful!");
+            window.location.href = "dashboard.html";
+        }
+    </script>
+</body>
+</html>
