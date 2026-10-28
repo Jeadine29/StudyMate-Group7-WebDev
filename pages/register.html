@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyMate - Register</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+<body class="register-page">
+
+    <!-- StudyMate Project | Register Page | Assigned to: Jeadine -->
+
+    <main class="register-wrapper">
+        <section class="register-card">
+
+            <div class="register-heading">
+                <h1>StudyMate</h1>
+                <p>Create Your Account</p>
+            </div>
+
+            <form class="register-form" action="dashboard.html">
+
+                <div class="form-group">
+                    <label for="fullname">Full Name:</label>
+                    <input
+                        type="text"
+                        id="fullname"
+                        name="fullname"
+                        placeholder="Enter your full name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        name="confirm-password"
+                        placeholder="Confirm your password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="register-button">
+                    Register
+                </button>
+            </form>
+
+            <p class="register-login-text">
+                Already have an account?
+                <a href="login.html">Login here</a>
+            </p>
+
+            <a href="../index.html" class="register-back-button">
+                Back to Home
+            </a>
+
+        </section>
+    </main>
+
+</body>
+</html>

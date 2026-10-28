@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Schedule - StudyMate AI</title>
+    <style>
+        /* General Reset & Body Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Header Styling */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        header h2 {
+            color: #16a085;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        /* Navigation Links */
+        nav a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Section Headings */
+        h3 {
+            color: #34495e;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background: #ffffff;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table th {
+            background-color: #16a085;
+            color: white;
+            font-weight: 600;
+        }
+
+        table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* Reminders List */
+        .reminders-section {
+            margin-bottom: 30px;
+        }
+
+        .reminders-section ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .reminders-section li {
+            margin-bottom: 8px;
+            color: #555555;
+        }
+
+        /* Footer / Action Link */
+        footer {
+            text-align: center;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background-color: #2980b9;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-link:hover {
+            background-color: #1f618d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>StudyMate AI</h1>
+            <h2>My Study Schedule</h2>
+            <p class="subtitle">Plan your study time and stay organized!</p>
+            <nav>
+                <a href="index.html">Back to Home</a> | <a href="dashboard.html">Dashboard</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="schedule-section">
+                <h3>Weekly Schedule</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Time</th>
+                            <th>Subject</th>
+                            <th>Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Monday</td>
+                            <td>8:00 AM - 9:00 AM</td>
+                            <td>Introduction to Computing</td>
+                            <td>Review Lessons</td>
+                        </tr>
+                        <tr>
+                            <td>Tuesday</td>
+                            <td>9:00 AM - 10:00 AM</td>
+                            <td>Computer Programming 1</td>
+                            <td>Practice Coding</td>
+                        </tr>
+                        <tr>
+                            <td>Wednesday</td>
+                            <td>1:00 PM - 2:00 PM</td>
+                            <td>Web Design</td>
+                            <td>Practice HTML</td>
+                        </tr>
+                        <tr>
+                            <td>Thursday</td>
+                            <td>10:00 AM - 11:00 AM</td>
+                            <td>Mathematics</td>
+                            <td>Solve Exercises</td>
+                        </tr>
+                        <tr>
+                            <td>Friday</td>
+                            <td>2:00 PM - 3:00 PM</td>
+                            <td>Entrepreneurial Mind</td>
+                            <td>Read Notes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="reminders-section">
+                <h3>Study Reminders</h3>
+                <ul>
+                    <li>Review your lessons every day.</li>
+                    <li>Take short breaks while studying.</li>
+                    <li>Finish assignments before the deadline.</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="subjects.html" class="btn-link">View My Subjects</a></p>
+        </footer>
+    </div>
+</body>
+</html>

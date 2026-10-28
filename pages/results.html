@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyMate - Results</title>
+</head>
+<body>
+
+    <!-- StudyMate Project | Results Page | Assigned to: Arnan -->
+
+    <h1>StudyMate</h1>
+    <h2>Quiz Results</h2>
+
+    <p id="latestScore">Take the quiz to see your score here.</p>
+
+    <h3>Study Progress</h3>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Activity</th>
+                <th>Score</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>Web Design</td>
+                <td>HTML Quiz</td>
+                <td id="quizScore">Not taken</td>
+                <td id="quizStatus">Pending</td>
+            </tr>
+
+            <tr>
+                <td>Computer Programming 1</td>
+                <td>C Programming</td>
+                <td>Not taken</td>
+                <td>Pending</td>
+            </tr>
+
+            <tr>
+                <td>Introduction to Computing</td>
+                <td>Computer Basics</td>
+                <td>Not taken</td>
+                <td>Pending</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>
+        <button type="button"
+            onclick="window.location.href='quiz.html'">
+            Try Quiz Again
+        </button>
+    </p>
+
+    <p><a href="dashboard.html">Back to Dashboard</a></p>
+    <p><a href="../index.html">Back to Home</a></p>
+
+    <script>
+        const savedScore = sessionStorage.getItem("studyMateScore");
+
+        if (savedScore !== null) {
+            const score = Number(savedScore);
+
+            document.getElementById("latestScore").textContent =
+                "Your latest score is " + score + " out of 5.";
+
+            document.getElementById("quizScore").textContent =
+                score + " / 5";
+
+            document.getElementById("quizStatus").textContent =
+                score >= 3 ? "Passed" : "Needs Review";
+        }
+    </script>
+
+</body>
+</html>

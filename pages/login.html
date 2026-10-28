@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>StudyMate - Login</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+
+<body class="login-page">
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container login-header">
+
+            <a href="../index.html" class="login-brand">
+                <span class="login-logo">S</span>
+                <span class="brand-name">StudyMate</span>
+            </a>
+
+            <a href="../index.html" class="btn btn-ghost btn-sm">
+                Back to Home
+            </a>
+
+        </div>
+    </header>
+
+    <!-- LOGIN SECTION -->
+    <main class="login-wrapper">
+
+        <section class="login-card">
+
+            <div class="login-heading">
+                <span class="login-icon">📚</span>
+                <h1>Welcome Back!</h1>
+                <p>Login to continue your learning journey.</p>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <form onsubmit="event.preventDefault(); window.location.href='dashboard.html';">
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-option">
+                        <input type="checkbox" name="remember">
+                        <span>Remember me</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary login-button">
+                    Login to Account
+                </button>
+
+            </form>
+
+            <!-- REGISTER LINK -->
+            <p class="register-text">
+                Don't have an account?
+                <a href="register.html">Create an account</a>
+            </p>
+
+            <!-- BACK BUTTON -->
+            <button
+                type="button"
+                class="btn btn-ghost back-button"
+                onclick="history.back()"
+            >
+                &larr; Go Back
+            </button>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <span class="footer-brand">StudyMate</span>
+            <p>&copy; 2026 StudyMate. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

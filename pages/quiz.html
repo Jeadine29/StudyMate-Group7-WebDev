@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyMate - Register</title>
+</head>
+<body>
+
+    <!-- StudyMate Project | Register Page | Assigned to: Jhunric -->
+
+    <h1>StudyMate</h1>
+    <h2>Create Your Account</h2>
+
+    <form onsubmit="event.preventDefault();
+        window.location.href='dashboard.html';">
+
+        <p>
+            <label for="fullname">Full Name:</label><br>
+            <input type="text" id="fullname" name="fullname"
+                placeholder="Enter your full name" required>
+        </p>
+
+        <p>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email"
+                placeholder="Enter your email" required>
+        </p>
+
+        <p>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password"
+                placeholder="Create a password" required>
+        </p>
+
+        <p>
+            <label for="confirm-password">Confirm Password:</label><br>
+            <input type="password" id="confirm-password"
+                name="confirm-password"
+                placeholder="Confirm your password" required>
+        </p>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p>
+        Already have an account?
+        <a href="login.html">Login here</a>
+    </p>
+
+    <p><a href="../index.html">Back to Home</a></p>
+
+</body>
+</html>
