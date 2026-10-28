@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>StudyMate - Home</title>
+  <meta name="description" content="StudyMate helps students create summaries, flashcards, quizzes, and study schedules.">
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="css/main.css">
+
+  <!-- Flashcards CSS - Brett -->
+  <link rel="stylesheet" href="pages/flashcards.css">
+
+  <!-- Schedules CSS - Brett -->
+  <link rel="stylesheet" href="pages/schedules.css">
+</head>
+
+<body>
+
+  <!-- Header - Jeadine -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <a href="index.html" class="brand">
+        <img src="assets/studymate-logo.svg" alt="StudyMate logo" width="40" height="40">
+
+        <span class="brand-text">
+          <span class="brand-name">StudyMate</span>
+          <span class="brand-tag">STUDY • FOCUS • LEARN</span>
+        </span>
+      </a>
+
+      <!-- Navigation - Jeadine -->
+      <nav class="site-nav" aria-label="Main navigation">
+
+        <!-- Home - Jeadine -->
+        <a href="index.html" class="nav-link active">Home</a>
+
+        <!-- Login - Jeadine -->
+        <a href="pages/login.html" class="nav-link">Login</a>
+
+        <!-- Register - Jeadine -->
+        <a href="pages/register.html" class="nav-link">Register</a>
+
+        <!-- Subjects - Arnan -->
+        <a href="pages/subjects.html" class="nav-link">Subjects</a>
+
+        <!-- Schedule - Brett -->
+        <a href="pages/schedule.html" class="nav-link">Schedule</a>
+
+        <a href="pages/login.html" class="btn btn-primary btn-sm">Get Started</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Hero Section - Jeadine -->
+    <section class="hero">
+      <div class="container hero-inner">
+
+        <div class="hero-copy">
+          <span class="eyebrow">AI-powered study assistant</span>
+          <h1>Welcome to StudyMate!</h1>
+          <h2 class="hero-headline">Study Smarter. Review Better.</h2>
+
+          <p class="hero-text">
+            Organize your learning materials and prepare for exams
+            using reviewers, flashcards, quizzes, subjects, and
+            study schedules.
+          </p>
+
+          <div class="hero-actions">
+            <a href="pages/login.html" class="btn btn-primary">Get Started</a>
+            <a href="#how-it-works" class="btn btn-ghost">See How It Works</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="How StudyMate works">
+          <div class="flow-card">
+            <span class="flow-emoji">📄</span>
+            <span class="flow-label">PDF / Lesson</span>
+          </div>
+
+          <span class="flow-arrow">↓</span>
+
+          <div class="flow-card flow-card-accent">
+            <span class="flow-emoji">✨</span>
+            <span class="flow-label">AI Analysis</span>
+          </div>
+
+          <span class="flow-arrow">↓</span>
+
+          <div class="flow-card">
+            <span class="flow-emoji">📚</span>
+            <span class="flow-label">Summary + Cards + Quiz</span>
+          </div>
+
+          <span class="flow-arrow">↓</span>
+
+          <div class="flow-card flow-card-accent">
+            <span class="flow-emoji">🎯</span>
+            <span class="flow-label">Personalized Review</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- How It Works - Jeadine -->
+    <section id="how-it-works" class="section">
+      <div class="container">
+
+        <div class="section-head">
+          <h2 class="section-title">How It Works</h2>
+          <p class="section-sub">From upload to mastery in four simple steps.</p>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <span class="step-num">1</span>
+            <h3>Upload</h3>
+            <p>Upload your lesson or module as a PDF.</p>
+          </li>
+
+          <li class="step">
+            <span class="step-num">2</span>
+            <h3>Analyze</h3>
+            <p>StudyMate analyzes your learning material.</p>
+          </li>
+
+          <li class="step">
+            <span class="step-num">3</span>
+            <h3>Review</h3>
+            <p>Study with summaries, flashcards, and quizzes.</p>
+          </li>
+
+          <li class="step">
+            <span class="step-num">4</span>
+            <h3>Improve</h3>
+            <p>Identify topics that need more practice.</p>
+          </li>
+        </ol>
+
+      </div>
+    </section>
+
+    <!-- Features Section - Jeadine -->
+    <section class="section section-muted">
+      <div class="container">
+
+        <div class="section-head">
+          <h2 class="section-title">StudyMate Features</h2>
+          <p class="section-sub">Your tools for smarter studying.</p>
+        </div>
+
+        <div class="feature-grid">
+
+          <!-- Dashboard - Jhunric -->
+          <a href="pages/dashboard.html" class="feature-card">
+            <span class="feature-icon">📊</span>
+            <h3>Student Dashboard</h3>
+            <p>View your study overview and materials.</p>
+          </a>
+
+          <!-- Subjects - Arnan -->
+          <a href="pages/subjects.html" class="feature-card">
+            <span class="feature-icon">🗂️</span>
+            <h3>My Subjects</h3>
+            <p>Organize your subjects and resources.</p>
+          </a>
+
+          <!-- Schedule - Brett -->
+          <a href="pages/schedule.html" class="feature-card">
+            <span class="feature-icon">📅</span>
+            <h3>Study Schedule</h3>
+            <p>Plan your weekly study activities.</p>
+          </a>
+
+          <!-- Upload - Jhunric -->
+          <a href="pages/upload.html" class="feature-card">
+            <span class="feature-icon">⬆️</span>
+            <h3>Upload Materials</h3>
+            <p>Access your uploaded lessons.</p>
+          </a>
+
+          <!-- Reviewer - Arnan -->
+          <a href="pages/reviewer.html" class="feature-card">
+            <span class="feature-icon">📖</span>
+            <h3>Reviewer</h3>
+            <p>Review important concepts and summaries.</p>
+          </a>
+
+          <!-- Flashcards - Brett -->
+          <a href="pages/flashcards.html" class="feature-card">
+            <span class="feature-icon">🧠</span>
+            <h3>Flashcards</h3>
+            <p>Practice with questions and answers.</p>
+          </a>
+
+          <!-- Quiz - Sammy -->
+          <a href="pages/quiz.html" class="feature-card">
+            <span class="feature-icon">📝</span>
+            <h3>Quiz</h3>
+            <p>Test your knowledge.</p>
+          </a>
+
+          <!-- Results - Sammy -->
+          <a href="pages/results.html" class="feature-card">
+            <span class="feature-icon">🎉</span>
+            <h3>Results</h3>
+            <p>Check your quiz scores.</p>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Study Tools - Jeadine -->
+    <section class="section">
+      <div class="container">
+
+        <div class="section-head">
+          <h2 class="section-title">Explore Your Study Tools</h2>
+        </div>
+
+        <div class="explore-grid">
+
+          <!-- Subjects - Arnan -->
+          <div class="explore-card">
+            <h3>My Subjects</h3>
+            <p>Explore your subjects and learning resources.</p>
+            <a href="pages/subjects.html" class="btn btn-outline btn-sm">
+              View My Subjects
+            </a>
+          </div>
+
+          <!-- Schedule - Brett -->
+          <div class="explore-card">
+            <h3>My Study Schedule</h3>
+            <p>Organize your activities and study routine.</p>
+            <a href="pages/schedule.html" class="btn btn-outline btn-sm">
+              View My Schedule
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action - Jeadine -->
+    <section class="cta-band">
+      <div class="container cta-inner">
+        <h2>Ready to Study Smarter?</h2>
+        <p>Start reviewing your lessons with StudyMate.</p>
+
+        <!-- Register - Jeadine -->
+        <a href="pages/register.html" class="btn btn-light">Create an Account</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer - Jeadine -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="footer-brand">StudyMate</span>
+      <p>&copy; 2026 StudyMate. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
