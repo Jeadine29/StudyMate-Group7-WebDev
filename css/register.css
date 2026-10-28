@@ -1,0 +1,174 @@
+
+/* Register Page */
+
+.register-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background:
+        radial-gradient(
+            circle at top right,
+            var(--primary-soft) 0%,
+            transparent 40%
+        ),
+        var(--background);
+}
+
+/* Register Layout */
+
+.register-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+}
+
+/* Register Card */
+
+.register-card {
+    width: 100%;
+    max-width: 520px;
+    padding: 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Register Heading */
+
+.register-heading {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.register-heading h1 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.register-heading p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Register Form */
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.register-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.register-form label {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.register-form input {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--foreground);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.register-form input::placeholder {
+    color: var(--muted);
+}
+
+.register-form input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-ring);
+}
+
+/* Register Button */
+
+.register-button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 4px;
+    padding: 12px 20px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.register-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+}
+
+.register-button:active {
+    transform: translateY(0);
+}
+
+/* Login Link */
+
+.register-login-text {
+    margin-top: 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.register-login-text a {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.register-login-text a:hover {
+    text-decoration: underline;
+}
+
+/* Back to Home */
+
+.register-back-button {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.register-back-button:hover {
+    color: var(--primary);
+}
+
+/* Responsive Design */
+
+@media (max-width: 480px) {
+    .register-card {
+        padding: 28px 22px;
+    }
+
+    .register-heading h1 {
+        font-size: 1.55rem;
+    }
+
+    .register-wrapper {
+        padding: 32px 16px;
+    }
+}
