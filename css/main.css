@@ -1177,4 +1177,54 @@ textarea {
     .quiz-actions .btn {
         width: 100%;
     }
+
+    
+/* StudyMate Hero Image - Jeadine */
+
+.hero-visual--image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 620px;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.hero-image {
+    display: block;
+    width: 100%;
+    max-width: 620px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 20px;
+}
+
+/* Hero Image Responsive Design */
+
+@media (max-width: 900px) {
+    .hero-visual--image {
+        max-width: 100%;
+        margin-top: 25px;
+    }
+
+    .hero-image {
+        max-width: 550px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-visual--image {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .hero-image {
+        width: 100%;
+        border-radius: 14px;
+    }
 }
