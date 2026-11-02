@@ -1,19 +1,295 @@
-<section class="stats-grid">
-    <article class="stat-card">
-        <span>📚</span>
-        <strong>5</strong>
-        <small>Subjects</small>
-    </article>
 
-    <article class="stat-card">
-        <span>🧠</span>
-        <strong>5</strong>
-        <small>Flashcards</small>
-    </article>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <article class="stat-card">
-        <span>📝</span>
-        <strong>5</strong>
-        <small>Quiz questions</small>
-    </article>
-</section>
+    <title>Student Dashboard | StudyMate</title>
+
+    <meta name="description" content="Manage your study materials and learning activities with StudyMate.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+
+    <!-- JavaScript -->
+    <script src="../assets/studymate.js" defer></script>
+</head>
+
+<body>
+
+    <!-- StudyMate Project | Dashboard | Assigned to: Arnan -->
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container app-header-inner">
+
+            <a class="app-brand" href="../index.html">
+                <img
+                    src="../assets/studymate-logo.svg"
+                    width="38"
+                    height="38"
+                    alt="StudyMate Logo"
+                >
+
+                <span>
+                    StudyMate
+                    <small>STUDY • FOCUS • LEARN</small>
+                </span>
+            </a>
+
+            <nav class="app-nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="subjects.html">Subjects</a>
+                <a href="schedule.html">Schedule</a>
+                <a href="upload.html">Upload</a>
+
+                <button
+                    type="button"
+                    class="btn btn-outline btn-sm"
+                    data-logout
+                >
+                    Log Out
+                </button>
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container page-shell">
+
+        <!-- Welcome Section -->
+        <section class="page-heading">
+            <p class="eyebrow">YOUR PERSONAL STUDY SPACE</p>
+
+            <h1>
+                Welcome, <span data-user-name>Student</span>!
+            </h1>
+
+            <p>
+                Manage your learning materials, organize your study time,
+                and track your learning progress.
+            </p>
+        </section>
+
+        <!-- Study Overview -->
+        <section class="stats-grid">
+
+            <article class="stat-card">
+                <span>📚</span>
+                <strong id="materialCount">0</strong>
+                <small>Uploaded Materials</small>
+            </article>
+
+            <article class="stat-card">
+                <span>🧠</span>
+                <strong id="flashcardCount">0</strong>
+                <small>Available Flashcards</small>
+            </article>
+
+            <article class="stat-card">
+                <span>📝</span>
+                <strong id="quizCount">0</strong>
+                <small>Completed Quizzes</small>
+            </article>
+
+        </section>
+
+        <!-- Get Started Section -->
+        <section class="content-card">
+            <h2>Start Your Learning Journey</h2>
+
+            <p>
+                Upload your lesson materials first. StudyMate will use
+                your uploaded content to help you review and practice.
+            </p>
+
+            <div class="page-actions">
+                <a href="upload.html" class="btn btn-primary">
+                    Upload Materials
+                </a>
+
+                <a href="subjects.html" class="btn btn-outline">
+                    Explore Subjects
+                </a>
+            </div>
+        </section>
+
+        <!-- Study Tools -->
+        <section>
+            <div class="page-heading">
+                <h2>My Study Tools</h2>
+                <p>Access your learning activities in one place.</p>
+            </div>
+
+            <div class="tool-grid">
+
+                <a href="upload.html" class="tool-card">
+                    <span>📤</span>
+                    <h3>Upload Materials</h3>
+                    <p>
+                        Add your lessons and study files.
+                    </p>
+                </a>
+
+                <a href="reviewer.html" class="tool-card">
+                    <span>📖</span>
+                    <h3>Reviewer</h3>
+                    <p>
+                        Review important information from your lessons.
+                    </p>
+                </a>
+
+                <a href="flashcards.html" class="tool-card">
+                    <span>🧠</span>
+                    <h3>Flashcards</h3>
+                    <p>
+                        Practice remembering important concepts.
+                    </p>
+                </a>
+
+                <a href="quiz.html" class="tool-card">
+                    <span>📝</span>
+                    <h3>Quiz</h3>
+                    <p>
+                        Test your knowledge and understanding.
+                    </p>
+                </a>
+
+                <a href="results.html" class="tool-card">
+                    <span>🏆</span>
+                    <h3>Results</h3>
+                    <p>
+                        Check your completed quiz scores.
+                    </p>
+                </a>
+
+                <a href="schedule.html" class="tool-card">
+                    <span>📅</span>
+                    <h3>Study Schedule</h3>
+                    <p>
+                        Organize your personal study activities.
+                    </p>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Uploaded Materials Overview -->
+        <section class="content-card" style="margin-top: 28px;">
+
+            <div class="row" style="justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <h2>My Recent Materials</h2>
+
+                <a href="upload.html" class="text-link">
+                    View All Materials →
+                </a>
+            </div>
+
+            <div id="dashboardMaterials">
+                <p class="empty-state">
+                    You haven't uploaded any materials yet.
+                    Start by adding your first lesson.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container">
+            © 2026 StudyMate | STUDY • FOCUS • LEARN
+        </div>
+    </footer>
+
+    <!-- Dashboard Data -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const user = JSON.parse(
+                localStorage.getItem("studyMateCurrentUser") || "null"
+            );
+
+            if (!user) return;
+
+            const emailKey = encodeURIComponent(user.email);
+
+            const files = JSON.parse(
+                localStorage.getItem("studyMateFiles_" + emailKey) || "[]"
+            );
+
+            const results = JSON.parse(
+                localStorage.getItem("studyMateResults_" + emailKey) || "[]"
+            );
+
+            const materialCount = document.getElementById("materialCount");
+            const flashcardCount = document.getElementById("flashcardCount");
+            const quizCount = document.getElementById("quizCount");
+            const dashboardMaterials = document.getElementById("dashboardMaterials");
+
+            // Display uploaded material count
+            materialCount.textContent = files.length;
+
+            // Count available flashcards from uploaded lesson content
+            const flashcards = files.flatMap(file =>
+                file.content
+                    .split(/[.!?\n]+/)
+                    .map(sentence => sentence.trim())
+                    .filter(sentence => sentence.length > 15)
+            );
+
+            flashcardCount.textContent = flashcards.length;
+
+            // Display completed quiz count
+            quizCount.textContent = results.length;
+
+            // Display uploaded materials
+            if (files.length > 0) {
+
+                dashboardMaterials.innerHTML = files.map(file => `
+                    <div class="file-row">
+                        <span>📄 ${escapeText(file.name)}</span>
+                        <span class="helper-text">Uploaded lesson</span>
+                    </div>
+                `).join("");
+
+            } else {
+
+                dashboardMaterials.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No materials uploaded yet.</h3>
+                        <p>
+                            Upload your first lesson to start creating
+                            your study resources.
+                        </p>
+
+                        <a href="upload.html" class="btn btn-primary">
+                            Upload My First Lesson
+                        </a>
+                    </div>
+                `;
+            }
+
+        });
+
+        function escapeText(value) {
+            return String(value).replace(/[&<>"']/g, character => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[character]);
+        }
+    </script>
+
+</body>
+</html>
