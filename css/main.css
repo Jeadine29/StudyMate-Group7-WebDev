@@ -1,3 +1,4 @@
+
 /* StudyMate Design Tokens */
 :root {
     --primary: #6c5ce7;
@@ -320,56 +321,34 @@ textarea {
     margin-top: 28px;
 }
 
-/* Homepage Hero Visual */
-.hero-visual {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    padding: 28px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-}
+/* Hero Image - Jeadine */
+/* No white card, border, background, or shadow */
 
-.flow-card {
+.hero-image {
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: center;
     width: 100%;
-    padding: 16px 20px;
-    background: var(--background);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    max-width: 620px;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
 }
 
-.flow-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-card);
-}
-
-.flow-card-accent {
-    background: var(--primary-soft);
-    border-color: transparent;
-}
-
-.flow-emoji {
-    font-size: 1.5rem;
-    line-height: 1;
-}
-
-.flow-label {
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--foreground);
-}
-
-.flow-arrow {
-    color: var(--primary);
-    font-size: 1.1rem;
-    font-weight: 700;
+.hero-image-img {
+    display: block;
+    width: 100%;
+    max-width: 620px;
+    height: auto;
+    object-fit: contain;
+    border: none;
+    border-radius: 16px;
+    box-shadow: none;
 }
 
 /* Homepage Steps */
@@ -1075,8 +1054,14 @@ textarea {
         grid-template-columns: 1fr;
     }
 
-    .hero-visual {
+    .hero-image {
         order: -1;
+        max-width: 100%;
+        margin-top: 25px;
+    }
+
+    .hero-image-img {
+        max-width: 550px;
     }
 
     .feature-grid {
@@ -1149,6 +1134,16 @@ textarea {
         padding: 56px 0;
     }
 
+    .hero-image {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .hero-image-img {
+        width: 100%;
+        border-radius: 14px;
+    }
+
     .quiz-info-card {
         align-items: flex-start;
         padding: 20px;
@@ -1175,66 +1170,5 @@ textarea {
 
     .quiz-actions .btn {
         width: 100%;
-    }
-}
-
-
-
-/* StudyMate Hero Image - Jeadine */
-
-.hero-visual--image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 620px;
-    min-width: 0;
-    min-height: 0;
-
-    /* Remove old flow-card design */
-    padding: 0;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-
-    overflow: visible;
-}
-
-.hero-visual--image .hero-image {
-    display: block;
-    width: 100%;
-    max-width: 620px;
-    height: auto;
-    object-fit: contain;
-
-    border: none;
-    border-radius: 16px;
-    box-shadow: none;
-}
-
-/* Hero Image Responsive Design */
-
-@media (max-width: 960px) {
-    .hero-visual--image {
-        order: -1;
-        max-width: 100%;
-        margin-top: 25px;
-    }
-
-    .hero-visual--image .hero-image {
-        max-width: 550px;
-    }
-}
-
-@media (max-width: 600px) {
-    .hero-visual--image {
-        width: 100%;
-        margin-top: 15px;
-    }
-
-    .hero-visual--image .hero-image {
-        width: 100%;
-        border-radius: 14px;
     }
 }
