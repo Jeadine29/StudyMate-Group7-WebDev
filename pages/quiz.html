@@ -1,1 +1,277 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HTML Basics Quiz | StudyMate</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../css/main.css"><script src="../assets/studymate.js" defer></script></head><body><header class="app-header"><div class="container app-header-inner"><a class="app-brand" href="../index.html"><img src="../assets/studymate-logo.svg" width="38" height="38" alt=""><span>StudyMate<small>STUDY • FOCUS • LEARN</small></span></a><nav class="app-nav"><a href="dashboard.html">Dashboard</a><a href="subjects.html">Subjects</a><a href="schedule.html">Schedule</a><a href="upload.html">Upload</a></nav></div></header><main class="container page-shell"><div class="page-heading"><p class="eyebrow">YOUR PERSONAL STUDY SPACE</p><h1>HTML Basics Quiz</h1><p>Choose one answer for each question, then submit.</p></div><form id="quizForm" class="quiz-form"><fieldset class="question-card" data-answer="b" data-name="q1"><legend>1. What does HTML stand for?</legend><label><input type="radio" name="q1" value="a" required> High Text Machine Language</label><label><input type="radio" name="q1" value="b"> HyperText Markup Language</label><label><input type="radio" name="q1" value="c"> Hyper Transfer Main Language</label></fieldset><fieldset class="question-card" data-answer="a" data-name="q2"><legend>2. Which tag creates the largest heading?</legend><label><input type="radio" name="q2" value="a" required> &lt;h1&gt;</label><label><input type="radio" name="q2" value="b"> &lt;h6&gt;</label><label><input type="radio" name="q2" value="c"> &lt;head&gt;</label></fieldset><fieldset class="question-card" data-answer="c" data-name="q3"><legend>3. Which tag defines a paragraph?</legend><label><input type="radio" name="q3" value="a" required> &lt;div&gt;</label><label><input type="radio" name="q3" value="b"> &lt;title&gt;</label><label><input type="radio" name="q3" value="c"> &lt;p&gt;</label></fieldset><fieldset class="question-card" data-answer="b" data-name="q4"><legend>4. Which tag creates a hyperlink?</legend><label><input type="radio" name="q4" value="a" required> &lt;link&gt;</label><label><input type="radio" name="q4" value="b"> &lt;a&gt;</label><label><input type="radio" name="q4" value="c"> &lt;href&gt;</label></fieldset><fieldset class="question-card" data-answer="a" data-name="q5"><legend>5. Which attribute provides alternative text?</legend><label><input type="radio" name="q5" value="a" required> alt</label><label><input type="radio" name="q5" value="b"> src</label><label><input type="radio" name="q5" value="c"> title</label></fieldset><div class="page-actions"><a class="btn btn-outline" href="reviewer.html">Review Lessons</a><button class="btn btn-primary">Submit Quiz</button></div></form></main><footer class="app-footer"><div class="container">© 2026 StudyMate · Study • Focus • Learn</div></footer></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Study Quiz | StudyMate</title>
+    <meta name="description" content="Test your knowledge with StudyMate.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+
+    <!-- Main JavaScript -->
+    <script src="../assets/studymate.js" defer></script>
+</head>
+
+<body>
+
+    <!-- StudyMate Project | Quiz Page | Assigned to: Sammy -->
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container app-header-inner">
+
+            <a class="app-brand" href="../index.html">
+                <img
+                    src="../assets/studymate-logo.svg"
+                    width="38"
+                    height="38"
+                    alt="StudyMate Logo"
+                >
+
+                <span>
+                    StudyMate
+                    <small>STUDY • FOCUS • LEARN</small>
+                </span>
+            </a>
+
+            <nav class="app-nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="subjects.html">Subjects</a>
+                <a href="schedule.html">Schedule</a>
+                <a href="upload.html">Upload</a>
+
+                <button type="button" class="btn btn-outline btn-sm" data-logout>
+                    Log Out
+                </button>
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container page-shell">
+
+        <section class="page-heading">
+            <p class="eyebrow">TEST YOUR KNOWLEDGE</p>
+            <h1>Study Quiz</h1>
+            <p>
+                Answer the questions and check how well you understand
+                the lesson.
+            </p>
+        </section>
+
+        <!-- Message if there are no uploaded lessons -->
+        <section id="quizLocked" class="content-card empty-state" hidden>
+            <div class="quiz-empty-icon">📝</div>
+
+            <h2>No Quiz Available Yet</h2>
+
+            <p>
+                You need to upload your lesson materials before taking
+                a quiz.
+            </p>
+
+            <a href="upload.html" class="btn btn-primary">
+                Upload Lesson Materials
+            </a>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quizSection" hidden>
+
+            <div class="quiz-info-card">
+                <div>
+                    <span class="quiz-label">QUIZ CATEGORY</span>
+                    <h2>HTML Basics</h2>
+                    <p>Choose the best answer for each question.</p>
+                </div>
+
+                <div class="quiz-total">
+                    <strong>5</strong>
+                    <span>Questions</span>
+                </div>
+            </div>
+
+            <form id="quizForm" class="quiz-form">
+
+                <!-- Question 1 -->
+                <fieldset class="question-card" data-answer="b" data-name="q1">
+                    <legend>
+                        <span class="question-number">QUESTION 01</span>
+                        What does HTML stand for?
+                    </legend>
+
+                    <label>
+                        <input type="radio" name="q1" value="a" required>
+                        <span>Hyper Text Machine Language</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="q1" value="b">
+                        <span>HyperText Markup Language</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="q1" value="c">
+                        <span>Hyper Transfer Main Language</span>
+                    </label>
+                </fieldset>
+
+                <!-- Question 2 -->
+                <fieldset class="question-card" data-answer="a" data-name="q2">
+                    <legend>
+                        <span class="question-number">QUESTION 02</span>
+                        Which HTML tag creates the largest heading?
+                    </legend>
+
+                    <label>
+                        <input type="radio" name="q2" value="a" required>
+                        <span>&lt;h1&gt;</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="q2" value="b">
+                        <span>&lt;h6&gt;</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="q2" value="c">
+                        <span>&lt;head&gt;</span>
+                    </label>
+                </fieldset>
+
+                <!-- Question 3 -->
+                <fieldset class="question-card" data-answer="c" data-name="q3">
+                    <legend>
+                        <span class="question-number">QUESTION 03</span>
+                        Which HTML tag is used to create a paragraph?
+                    </legend>
+
+                    <label>
+                        <input type="radio" name="q3" value="a" required>
+                        <span>&lt;div&gt;</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="q3" value="b">
+                        <span>&lt;title&gt;</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="q3" value="c">
+                        <span>&lt;p&gt;</span>
+                    </label>
+                </fieldset>
+
+                <!-- Question 4 -->
+                <fieldset class="question-card" data-answer="b" data-name="q4">
+                    <legend>
+                        <span class="question-number">QUESTION 04</span>
+                        Which HTML tag creates a hyperlink?
+                    </legend>
+
+                    <label>
+                        <input type="radio" name="q4" value="a" required>
+                        <span>&lt;link&gt;</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="q4" value="b">
+                        <span>&lt;a&gt;</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="q4" value="c">
+                        <span>&lt;href&gt;</span>
+                    </label>
+                </fieldset>
+
+                <!-- Question 5 -->
+                <fieldset class="question-card" data-answer="a" data-name="q5">
+                    <legend>
+                        <span class="question-number">QUESTION 05</span>
+                        Which attribute provides alternative text for an image?
+                    </legend>
+
+                    <label>
+                        <input type="radio" name="q5" value="a" required>
+                        <span>alt</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="q5" value="b">
+                        <span>src</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="q5" value="c">
+                        <span>title</span>
+                    </label>
+                </fieldset>
+
+                <!-- Quiz Actions -->
+                <div class="quiz-actions">
+                    <a href="reviewer.html" class="btn btn-outline">
+                        Review Lessons
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        Submit Quiz
+                    </button>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container">
+            © 2026 StudyMate | STUDY • FOCUS • LEARN
+        </div>
+    </footer>
+
+    <!-- Check if the student has uploaded a lesson -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const currentUser = JSON.parse(
+                localStorage.getItem("studyMateCurrentUser") || "null"
+            );
+
+            const quizSection = document.getElementById("quizSection");
+            const quizLocked = document.getElementById("quizLocked");
+
+            if (!currentUser) {
+                return;
+            }
+
+            const emailKey = encodeURIComponent(currentUser.email);
+
+            const uploadedFiles = JSON.parse(
+                localStorage.getItem("studyMateFiles_" + emailKey) || "[]"
+            );
+
+            if (uploadedFiles.length > 0) {
+                quizSection.hidden = false;
+                quizLocked.hidden = true;
+            } else {
+                quizSection.hidden = true;
+                quizLocked.hidden = false;
+            }
+
+        });
+    </script>
+
+</body>
+</html>
