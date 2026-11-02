@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Study Quiz | StudyMate</title>
-    <meta name="description" content="Test your knowledge with StudyMate.">
+    <title>Quiz | StudyMate</title>
+
+    <meta name="description" content="Test your knowledge using your uploaded study materials.">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,178 +60,85 @@
     <!-- Main Content -->
     <main class="container page-shell">
 
+        <!-- Page Heading -->
         <section class="page-heading">
             <p class="eyebrow">TEST YOUR KNOWLEDGE</p>
-            <h1>Study Quiz</h1>
+
+            <h1>My Quiz</h1>
+
             <p>
-                Answer the questions and check how well you understand
-                the lesson.
+                Practice and test your understanding using your uploaded
+                lesson materials.
             </p>
         </section>
 
-        <!-- Message if there are no uploaded lessons -->
-        <section id="quizLocked" class="content-card empty-state" hidden>
+        <!-- No Uploaded Materials -->
+        <section id="quizEmpty" class="content-card empty-state" hidden>
+
             <div class="quiz-empty-icon">📝</div>
 
             <h2>No Quiz Available Yet</h2>
 
             <p>
-                You need to upload your lesson materials before taking
-                a quiz.
+                You haven't uploaded any lesson materials.
+                Upload your lessons first to start your study activities.
             </p>
 
             <a href="upload.html" class="btn btn-primary">
-                Upload Lesson Materials
+                Upload Materials
             </a>
+
         </section>
 
-        <!-- Quiz Section -->
-        <section id="quizSection" hidden>
+        <!-- Uploaded Materials Available -->
+        <section id="quizAvailable" hidden>
 
-            <div class="quiz-info-card">
-                <div>
-                    <span class="quiz-label">QUIZ CATEGORY</span>
-                    <h2>HTML Basics</h2>
-                    <p>Choose the best answer for each question.</p>
+            <div class="content-card">
+
+                <div class="quiz-empty-icon">📚</div>
+
+                <h2>Your Study Materials Are Ready</h2>
+
+                <p>
+                    You have uploaded lesson materials. Choose a lesson
+                    to prepare your quiz.
+                </p>
+
+                <div id="quizMaterials" class="quiz-material-list">
+                    <!-- Uploaded materials will appear here -->
                 </div>
 
-                <div class="quiz-total">
-                    <strong>5</strong>
-                    <span>Questions</span>
-                </div>
             </div>
 
-            <form id="quizForm" class="quiz-form">
+        </section>
 
-                <!-- Question 1 -->
-                <fieldset class="question-card" data-answer="b" data-name="q1">
-                    <legend>
-                        <span class="question-number">QUESTION 01</span>
-                        What does HTML stand for?
-                    </legend>
+        <!-- Quiz Instructions -->
+        <section class="content-card">
 
-                    <label>
-                        <input type="radio" name="q1" value="a" required>
-                        <span>Hyper Text Machine Language</span>
-                    </label>
+            <h2>How to Take a Quiz</h2>
 
-                    <label>
-                        <input type="radio" name="q1" value="b">
-                        <span>HyperText Markup Language</span>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="q1" value="c">
-                        <span>Hyper Transfer Main Language</span>
-                    </label>
-                </fieldset>
-
-                <!-- Question 2 -->
-                <fieldset class="question-card" data-answer="a" data-name="q2">
-                    <legend>
-                        <span class="question-number">QUESTION 02</span>
-                        Which HTML tag creates the largest heading?
-                    </legend>
-
-                    <label>
-                        <input type="radio" name="q2" value="a" required>
-                        <span>&lt;h1&gt;</span>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="q2" value="b">
-                        <span>&lt;h6&gt;</span>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="q2" value="c">
-                        <span>&lt;head&gt;</span>
-                    </label>
-                </fieldset>
-
-                <!-- Question 3 -->
-                <fieldset class="question-card" data-answer="c" data-name="q3">
-                    <legend>
-                        <span class="question-number">QUESTION 03</span>
-                        Which HTML tag is used to create a paragraph?
-                    </legend>
-
-                    <label>
-                        <input type="radio" name="q3" value="a" required>
-                        <span>&lt;div&gt;</span>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="q3" value="b">
-                        <span>&lt;title&gt;</span>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="q3" value="c">
-                        <span>&lt;p&gt;</span>
-                    </label>
-                </fieldset>
-
-                <!-- Question 4 -->
-                <fieldset class="question-card" data-answer="b" data-name="q4">
-                    <legend>
-                        <span class="question-number">QUESTION 04</span>
-                        Which HTML tag creates a hyperlink?
-                    </legend>
-
-                    <label>
-                        <input type="radio" name="q4" value="a" required>
-                        <span>&lt;link&gt;</span>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="q4" value="b">
-                        <span>&lt;a&gt;</span>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="q4" value="c">
-                        <span>&lt;href&gt;</span>
-                    </label>
-                </fieldset>
-
-                <!-- Question 5 -->
-                <fieldset class="question-card" data-answer="a" data-name="q5">
-                    <legend>
-                        <span class="question-number">QUESTION 05</span>
-                        Which attribute provides alternative text for an image?
-                    </legend>
-
-                    <label>
-                        <input type="radio" name="q5" value="a" required>
-                        <span>alt</span>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="q5" value="b">
-                        <span>src</span>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="q5" value="c">
-                        <span>title</span>
-                    </label>
-                </fieldset>
-
-                <!-- Quiz Actions -->
-                <div class="quiz-actions">
-                    <a href="reviewer.html" class="btn btn-outline">
-                        Review Lessons
-                    </a>
-
-                    <button type="submit" class="btn btn-primary">
-                        Submit Quiz
-                    </button>
-                </div>
-
-            </form>
+            <ul class="reminder-list">
+                <li>Upload your lesson materials first.</li>
+                <li>Choose the lesson you want to study.</li>
+                <li>Review your lesson before taking a quiz.</li>
+                <li>Submit your answers to calculate your score.</li>
+                <li>Check your performance on the Results page.</li>
+            </ul>
 
         </section>
+
+        <!-- Page Actions -->
+        <div class="page-actions">
+
+            <a href="dashboard.html" class="btn btn-outline">
+                Back to Dashboard
+            </a>
+
+            <a href="upload.html" class="btn btn-primary">
+                Upload Materials
+            </a>
+
+        </div>
 
     </main>
 
@@ -241,7 +149,7 @@
         </div>
     </footer>
 
-    <!-- Check if the student has uploaded a lesson -->
+    <!-- Quiz Page Script -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
@@ -249,26 +157,69 @@
                 localStorage.getItem("studyMateCurrentUser") || "null"
             );
 
-            const quizSection = document.getElementById("quizSection");
-            const quizLocked = document.getElementById("quizLocked");
+            const quizEmpty = document.getElementById("quizEmpty");
+            const quizAvailable = document.getElementById("quizAvailable");
+            const quizMaterials = document.getElementById("quizMaterials");
 
-            if (!currentUser) {
+            // Check if the student is logged in
+            if (!currentUser || !currentUser.email) {
+                quizEmpty.hidden = false;
+                quizAvailable.hidden = true;
+
+                quizEmpty.querySelector("h2").textContent = "Please Log In First";
+
+                quizEmpty.querySelector("p").textContent =
+                    "Log in to your StudyMate account to access your study materials.";
+
+                quizEmpty.querySelector("a").textContent = "Go to Login";
+                quizEmpty.querySelector("a").href = "login.html";
+
                 return;
             }
 
+            // Get the logged-in student's uploaded materials
             const emailKey = encodeURIComponent(currentUser.email);
 
             const uploadedFiles = JSON.parse(
                 localStorage.getItem("studyMateFiles_" + emailKey) || "[]"
             );
 
-            if (uploadedFiles.length > 0) {
-                quizSection.hidden = false;
-                quizLocked.hidden = true;
-            } else {
-                quizSection.hidden = true;
-                quizLocked.hidden = false;
+            // Show empty state if there are no materials
+            if (!uploadedFiles.length) {
+                quizEmpty.hidden = false;
+                quizAvailable.hidden = true;
+                return;
             }
+
+            // Show available uploaded materials
+            quizEmpty.hidden = true;
+            quizAvailable.hidden = false;
+
+            quizMaterials.innerHTML = "";
+
+            uploadedFiles.forEach(function (file) {
+
+                const materialCard = document.createElement("div");
+                materialCard.className = "quiz-material-card";
+
+                const materialName = document.createElement("h3");
+                materialName.textContent = file.name || "Untitled Lesson";
+
+                const materialDescription = document.createElement("p");
+                materialDescription.textContent =
+                    "Uploaded lesson material";
+
+                const materialStatus = document.createElement("span");
+                materialStatus.className = "quiz-status";
+                materialStatus.textContent = "Ready for Review";
+
+                materialCard.appendChild(materialName);
+                materialCard.appendChild(materialDescription);
+                materialCard.appendChild(materialStatus);
+
+                quizMaterials.appendChild(materialCard);
+
+            });
 
         });
     </script>
