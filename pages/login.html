@@ -1,1 +1,104 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Login | StudyMate</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../css/main.css"><script src="../assets/studymate.js" defer></script></head><body class="auth-page"><main class="auth-wrap"><section class="auth-card"><a class="app-brand auth-brand" href="../index.html"><img src="../assets/studymate-logo.svg" width="42" height="42" alt=""><span>StudyMate<small>STUDY • FOCUS • LEARN</small></span></a><div class="page-heading"><h1>Welcome back!</h1><p>Log in to continue learning.</p></div><form id="loginForm" class="form-stack"><label>Email address<input type="email" name="email" autocomplete="email" required></label><label>Password<input type="password" name="password" autocomplete="current-password" required></label><button class="btn btn-primary btn-full">Login to Account</button></form><p class="auth-note">No account yet? <a href="register.html">Create one</a></p><a class="text-link" href="../index.html">← Back to Home</a><p class="demo-note">Demo only: accounts are stored in this browser, not on a secure server.</p></section></main></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | StudyMate</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../css/main.css">
+
+    <script src="../assets/studymate.js" defer></script>
+</head>
+
+<body class="auth-page">
+
+    <!-- StudyMate Project | Login Page | Assigned to: Jeadine -->
+
+    <main class="auth-wrap">
+
+        <section class="auth-card">
+
+            <a class="app-brand auth-brand" href="../index.html">
+                <img
+                    src="../assets/studymate-logo.svg"
+                    width="42"
+                    height="42"
+                    alt="StudyMate Logo"
+                >
+
+                <span>
+                    StudyMate
+                    <small>STUDY • FOCUS • LEARN</small>
+                </span>
+            </a>
+
+            <div class="page-heading">
+                <h1>Welcome back!</h1>
+                <p>Log in to continue learning.</p>
+            </div>
+
+            <form id="loginForm" class="form-stack">
+
+                <label for="loginEmail">
+                    Email Address
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+                </label>
+
+                <label for="loginPassword">
+                    Password
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </label>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-full"
+                >
+                    Login to Account
+                </button>
+
+            </form>
+
+            <p class="auth-note">
+                No account yet?
+                <a href="register.html">Create one</a>
+            </p>
+
+            <a class="text-link" href="../index.html">
+                ← Back to Home
+            </a>
+
+            <p class="demo-note">
+                Demo only: Accounts are stored in this browser,
+                not on a secure server.
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
