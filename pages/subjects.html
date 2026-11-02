@@ -1,1 +1,151 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>My Subjects | StudyMate</title><link rel="stylesheet" href="../css/main.css"><script src="../assets/studymate.js" defer></script></head><body><header class="app-header"><div class="container app-header-inner"><a class="app-brand" href="../index.html">StudyMate</a><nav class="app-nav"><a href="dashboard.html">Dashboard</a><a href="subjects.html">Subjects</a><a href="schedule.html">Schedule</a><a href="upload.html">Upload</a></nav></div></header><main class="container page-shell"><div class="page-heading"><h1>My Subjects</h1><p>Explore your subjects and learning resources.</p></div><section class="subject-grid"><article class="subject-card"><span>ICT 101</span><h2>Introduction to Computing</h2><p>Computer basics and information technology.</p><a href="reviewer.html">Open Reviewer →</a></article><article class="subject-card"><span>CP 101</span><h2>Computer Programming 1</h2><p>Programming concepts and basic coding.</p><a href="flashcards.html">Practice Flashcards →</a></article><article class="subject-card"><span>WD 101</span><h2>Web Design</h2><p>HTML and website development fundamentals.</p><a href="quiz.html">Take HTML Quiz →</a></article><article class="subject-card"><span>MMW 101</span><h2>Mathematics in the Modern World</h2><p>Mathematical concepts and applications.</p><a href="schedule.html">Study Schedule →</a></article><article class="subject-card"><span>EM 101</span><h2>Entrepreneurial Mind</h2><p>Business ideas and entrepreneurship.</p><a href="upload.html">Add Materials →</a></article></section><div class="page-actions"><a class="btn btn-outline" href="../index.html">Home</a><a class="btn btn-primary" href="dashboard.html">Dashboard</a></div></main></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Subjects | StudyMate</title>
+
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="../assets/studymate.js" defer></script>
+</head>
+<body>
+
+    <!-- StudyMate Project | Subjects Page -->
+
+    <header class="app-header">
+        <div class="container app-header-inner">
+            <a class="app-brand" href="../index.html">StudyMate</a>
+
+            <nav class="app-nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="subjects.html">Subjects</a>
+                <a href="schedule.html">Schedule</a>
+                <a href="upload.html">Upload</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container page-shell">
+
+        <div class="page-heading">
+            <h1>My Subjects</h1>
+            <p>View and organize your uploaded study materials.</p>
+        </div>
+
+        <!-- Login Required -->
+        <section id="subjectsLogin" class="empty-state" hidden>
+            <h2>Please Log In First</h2>
+            <p>You need to log in to view your subjects.</p>
+            <a href="login.html" class="btn btn-primary">Log In</a>
+        </section>
+
+        <!-- No Subjects -->
+        <section id="subjectsEmpty" class="empty-state" hidden>
+            <h2>No Subjects Yet</h2>
+            <p>
+                You haven't uploaded any study materials.
+                Upload your first lesson to start organizing your subjects.
+            </p>
+            <a href="upload.html" class="btn btn-primary">
+                Upload Materials
+            </a>
+        </section>
+
+        <!-- Uploaded Subjects -->
+        <section id="subjectsContent" hidden>
+            <div id="subjectGrid" class="subject-grid"></div>
+
+            <div class="page-actions">
+                <a href="upload.html" class="btn btn-primary">
+                    Upload More Materials
+                </a>
+            </div>
+        </section>
+
+        <div class="page-actions">
+            <a class="btn btn-outline" href="../index.html">Home</a>
+            <a class="btn btn-outline" href="dashboard.html">Dashboard</a>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const loginSection = document.getElementById("subjectsLogin");
+            const emptySection = document.getElementById("subjectsEmpty");
+            const contentSection = document.getElementById("subjectsContent");
+            const subjectGrid = document.getElementById("subjectGrid");
+
+            // Get the current logged-in user
+            let currentUser = null;
+
+            try {
+                currentUser = JSON.parse(
+                    localStorage.getItem("studyMateCurrentUser")
+                );
+            } catch (error) {
+                currentUser = null;
+            }
+
+            // Check if the user is logged in
+            if (!currentUser || !currentUser.email) {
+                loginSection.hidden = false;
+                return;
+            }
+
+            // Get materials belonging to this account
+            const userKey = encodeURIComponent(currentUser.email);
+            const storageKey = "studyMateFiles_" + userKey;
+
+            let materials = [];
+
+            try {
+                materials = JSON.parse(
+                    localStorage.getItem(storageKey)
+                ) || [];
+            } catch (error) {
+                materials = [];
+            }
+
+            // Show empty state if there are no uploaded materials
+            if (!Array.isArray(materials) || materials.length === 0) {
+                emptySection.hidden = false;
+                return;
+            }
+
+            // Display uploaded materials
+            contentSection.hidden = false;
+
+            materials.forEach(function (file) {
+
+                const card = document.createElement("article");
+                card.className = "subject-card";
+
+                const fileName = document.createElement("h2");
+                fileName.textContent = file.name || "Untitled Material";
+
+                const description = document.createElement("p");
+                description.textContent = "Uploaded study material";
+
+                const fileInfo = document.createElement("span");
+                fileInfo.textContent = "Your Material";
+
+                const link = document.createElement("a");
+                link.href = "reviewer.html";
+                link.textContent = "Open Reviewer →";
+
+                card.appendChild(fileInfo);
+                card.appendChild(fileName);
+                card.appendChild(description);
+                card.appendChild(link);
+
+                subjectGrid.appendChild(card);
+            });
+
+        });
+    </script>
+
+</body>
+</html>
