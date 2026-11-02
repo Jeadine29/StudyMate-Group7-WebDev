@@ -1,1 +1,89 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>My Study Schedule | StudyMate</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../css/main.css"><script src="../assets/studymate.js" defer></script></head><body><header class="app-header"><div class="container app-header-inner"><a class="app-brand" href="../index.html"><img src="../assets/studymate-logo.svg" width="38" height="38" alt=""><span>StudyMate<small>STUDY • FOCUS • LEARN</small></span></a><nav class="app-nav"><a href="dashboard.html">Dashboard</a><a href="subjects.html">Subjects</a><a href="schedule.html">Schedule</a><a href="upload.html">Upload</a></nav></div></header><main class="container page-shell"><div class="page-heading"><p class="eyebrow">YOUR PERSONAL STUDY SPACE</p><h1>My Study Schedule</h1><p>A sample weekly plan for your study sessions.</p></div><section class="content-card"><div class="table-scroll"><table class="data-table"><thead><tr><th>Day</th><th>Time</th><th>Subject</th><th>Activity</th></tr></thead><tbody><tr><td>Monday</td><td>8–9 AM</td><td>Introduction to Computing</td><td>Review lessons</td></tr><tr><td>Tuesday</td><td>9–10 AM</td><td>Computer Programming 1</td><td>Practice coding</td></tr><tr><td>Wednesday</td><td>1–2 PM</td><td>Web Design</td><td>Practice HTML</td></tr><tr><td>Thursday</td><td>10–11 AM</td><td>Mathematics in the Modern World</td><td>Solve exercises</td></tr><tr><td>Friday</td><td>2–3 PM</td><td>Entrepreneurial Mind</td><td>Read notes</td></tr></tbody></table></div></section><section class="content-card"><h2>Study Reminders</h2><ul class="reminder-list"><li>Review lessons regularly.</li><li>Take short breaks.</li><li>Finish assignments before deadlines.</li><li>Prepare materials before studying.</li></ul></section><div class="page-actions"><a class="btn btn-outline" href="../index.html">Home</a><a class="btn btn-primary" href="subjects.html">My Subjects</a></div></main><footer class="app-footer"><div class="container">© 2026 StudyMate · Study • Focus • Learn</div></footer></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Study Schedule | StudyMate</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="../assets/studymate.js" defer></script>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="container app-header-inner">
+        <a class="app-brand" href="../index.html">StudyMate</a>
+
+        <nav class="app-nav">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="subjects.html">Subjects</a>
+            <a href="schedule.html">Schedule</a>
+            <a href="upload.html">Upload</a>
+            <button data-logout class="btn btn-outline btn-sm">Log out</button>
+        </nav>
+    </div>
+</header>
+
+<main class="container page-shell">
+
+    <div class="page-heading">
+        <p class="eyebrow">PERSONAL STUDY PLANNER</p>
+        <h1>My Study Schedule</h1>
+        <p>Organize your own study activities.</p>
+    </div>
+
+    <section class="content-card">
+        <h2>Add a Study Activity</h2>
+
+        <form id="scheduleForm" class="form-stack">
+
+            <label>
+                Subject or Activity
+                <input
+                    type="text"
+                    name="subject"
+                    placeholder="Example: Computer Programming"
+                    required
+                >
+            </label>
+
+            <label>
+                Day
+                <select name="day" required>
+                    <option value="">Select a day</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                    <option>Sunday</option>
+                </select>
+            </label>
+
+            <label>
+                Study Time
+                <input type="time" name="time" required>
+            </label>
+
+            <button type="submit" class="btn btn-primary">
+                Add Schedule
+            </button>
+
+        </form>
+    </section>
+
+    <section class="content-card">
+        <h2>My Activities</h2>
+        <div id="scheduleList">
+            <p class="empty-state">No study schedule yet.</p>
+        </div>
+    </section>
+
+    <div class="page-actions">
+        <a href="dashboard.html" class="btn btn-outline">Back to Dashboard</a>
+    </div>
+
+</main>
+
+</body>
+</html>
