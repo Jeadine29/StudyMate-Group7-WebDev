@@ -1,1 +1,150 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Upload Materials | StudyMate</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../css/main.css"><script src="../assets/studymate.js" defer></script></head><body><header class="app-header"><div class="container app-header-inner"><a class="app-brand" href="../index.html"><img src="../assets/studymate-logo.svg" width="38" height="38" alt=""><span>StudyMate<small>STUDY • FOCUS • LEARN</small></span></a><nav class="app-nav"><a href="dashboard.html">Dashboard</a><a href="subjects.html">Subjects</a><a href="schedule.html">Schedule</a><a href="upload.html">Upload</a></nav></div></header><main class="container page-shell"><div class="page-heading"><p class="eyebrow">YOUR PERSONAL STUDY SPACE</p><h1>Upload Materials</h1><p>Add and organize your lesson files.</p></div><section class="content-card"><form id="uploadForm" class="form-stack"><label>Choose lesson files<input type="file" name="material" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.jpg,.png" multiple required></label><p class="helper-text">PDF, Word, PowerPoint, text, and image files.</p><button class="btn btn-primary">Add to My Materials</button></form></section><section class="content-card"><h2>My uploaded materials</h2><ul id="uploadedFiles" class="file-list"><li class="empty-state">Loading…</li></ul></section><p class="demo-note">Prototype limitation: only file names and sizes are saved in this browser. There is no server upload or AI document analysis yet.</p><div class="page-actions"><a class="btn btn-outline" href="dashboard.html">Dashboard</a><a class="btn btn-primary" href="reviewer.html">Open Reviewer</a></div></main><footer class="app-footer"><div class="container">© 2026 StudyMate · Study • Focus • Learn</div></footer></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Upload Materials | StudyMate</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+
+    <!-- JavaScript -->
+    <script src="../assets/studymate.js" defer></script>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container app-header-inner">
+
+            <a class="app-brand" href="../index.html">
+                <img src="../assets/studymate-logo.svg" width="38" height="38" alt="StudyMate Logo">
+
+                <span>
+                    StudyMate
+                    <small>STUDY • FOCUS • LEARN</small>
+                </span>
+            </a>
+
+            <nav class="app-nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="subjects.html">Subjects</a>
+                <a href="schedule.html">Schedule</a>
+                <a href="upload.html">Upload</a>
+
+                <button type="button" class="btn btn-outline btn-sm" data-logout>
+                    Log Out
+                </button>
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container page-shell">
+
+        <!-- Page Heading -->
+        <section class="page-heading">
+            <p class="eyebrow">YOUR PERSONAL STUDY SPACE</p>
+
+            <h1>Upload Materials</h1>
+
+            <p>
+                Upload your lesson materials and organize your study resources
+                in one place.
+            </p>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="content-card">
+
+            <h2>Upload Your Lessons</h2>
+
+            <p class="helper-text">
+                Select the lesson files you want to add to your StudyMate account.
+            </p>
+
+            <form id="uploadForm" class="form-stack">
+
+                <label for="material">
+                    Choose Lesson Files
+
+                    <input
+                        type="file"
+                        id="material"
+                        name="material"
+                        accept=".txt,.md"
+                        multiple
+                        required
+                    >
+                </label>
+
+                <p class="helper-text">
+                    Supported file formats: TXT and MD.
+                </p>
+
+                <button type="submit" class="btn btn-primary">
+                    Add to My Materials
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- Uploaded Materials -->
+        <section class="content-card">
+
+            <h2>My Uploaded Materials</h2>
+
+            <p class="helper-text">
+                Your uploaded lesson files will appear below.
+            </p>
+
+            <ul id="uploadedFiles" class="file-list">
+                <li class="empty-state">
+                    No materials uploaded yet.
+                </li>
+            </ul>
+
+        </section>
+
+        <!-- Prototype Information -->
+        <p class="demo-note">
+            Note: StudyMate currently supports TXT and MD lesson files
+            for reading and displaying lesson content. PDF, Word,
+            PowerPoint, and AI document analysis will be added in a
+            future version.
+        </p>
+
+        <!-- Page Navigation -->
+        <div class="page-actions">
+
+            <a href="dashboard.html" class="btn btn-outline">
+                Back to Dashboard
+            </a>
+
+            <a href="reviewer.html" class="btn btn-primary">
+                Open Reviewer
+            </a>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container">
+            © 2026 StudyMate | STUDY • FOCUS • LEARN
+        </div>
+    </footer>
+
+</body>
+</html>
