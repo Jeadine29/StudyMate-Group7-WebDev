@@ -1,3 +1,4 @@
+
 /* StudyMate Design Tokens */
 :root {
     --primary: #6c5ce7;
@@ -1069,6 +1070,195 @@ textarea {
     color: var(--success);
 }
 
+/* StudyMate Hero Image - Jeadine */
+.hero-visual--image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 620px;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+}
+
+.hero-visual--image .hero-image {
+    display: block;
+    width: 100%;
+    max-width: 620px;
+    height: auto;
+    object-fit: contain;
+    border: none;
+    border-radius: 16px;
+    box-shadow: none;
+}
+
+/* Back Button */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-width: unset;
+    min-height: unset;
+    padding: 6px 12px;
+    background: #ffffff;
+    color: var(--primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.back-button:hover {
+    background: var(--primary-soft);
+    border-color: var(--primary);
+}
+
+/* Multi Select Dropdown */
+.schedule-days-group {
+    position: relative;
+    width: 100%;
+}
+
+.day-selection-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--foreground);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.multi-select {
+    position: relative;
+    width: 100%;
+    margin-top: 0;
+}
+
+.multi-select-trigger {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.multi-select-trigger:hover,
+.multi-select-trigger:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--primary-ring);
+}
+
+.dropdown-arrow {
+    flex-shrink: 0;
+    color: var(--primary);
+    font-size: 18px;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.multi-select-trigger[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.multi-select-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    z-index: 100;
+}
+
+.multi-select-options[hidden] {
+    display: none;
+}
+
+/* Keep checkbox and day name in one row */
+.form-stack .multi-select-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 9px;
+    min-width: 0;
+    min-height: 40px;
+    padding: 9px 10px;
+    margin: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    color: var(--foreground);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.form-stack .multi-select-option:hover {
+    background: var(--primary-soft);
+}
+
+.form-stack .multi-select-option input[type="checkbox"] {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    flex: 0 0 16px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.form-stack .multi-select-option input[type="checkbox"]:focus {
+    outline: 2px solid var(--primary-ring);
+    outline-offset: 2px;
+}
+
+.form-stack .multi-select-option:has(input:checked) {
+    background: var(--primary-soft);
+    border-color: rgba(108, 92, 231, 0.2);
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.day-selection-hint {
+    display: block;
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
 /* Responsive Design */
 @media (max-width: 960px) {
     .hero-inner {
@@ -1085,6 +1275,16 @@ textarea {
 
     .steps {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-visual--image {
+        order: -1;
+        max-width: 100%;
+        margin-top: 25px;
+    }
+
+    .hero-visual--image .hero-image {
+        max-width: 550px;
     }
 }
 
@@ -1176,84 +1376,7 @@ textarea {
     .quiz-actions .btn {
         width: 100%;
     }
-}
 
-/* StudyMate Hero Image - Jeadine */
-
-.hero-visual--image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 620px;
-    min-width: 0;
-    min-height: 0;
-
-    /* Remove old flow-card design */
-    padding: 0;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-
-    overflow: visible;
-}
-
-.hero-visual--image .hero-image {
-    display: block;
-    width: 100%;
-    max-width: 620px;
-    height: auto;
-    object-fit: contain;
-
-    border: none;
-    border-radius: 16px;
-    box-shadow: none;
-}
-
-/* Back Button */
-.back-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    width: fit-content;
-    min-width: unset;
-    min-height: unset;
-
-    padding: 6px 12px;
-
-    background: #ffffff;
-    color: var(--primary);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-
-    font-size: 0.78rem;
-    font-weight: 600;
-
-    transition: all 0.2s ease;
-}
-
-.back-button:hover {
-    background: var(--primary-soft);
-    border-color: var(--primary);
-}
-
-/* Hero Image Responsive Design */
-
-@media (max-width: 960px) {
-    .hero-visual--image {
-        order: -1;
-        max-width: 100%;
-        margin-top: 25px;
-    }
-
-    .hero-visual--image .hero-image {
-        max-width: 550px;
-    }
-}
-
-@media (max-width: 600px) {
     .hero-visual--image {
         width: 100%;
         margin-top: 15px;
@@ -1262,5 +1385,19 @@ textarea {
     .hero-visual--image .hero-image {
         width: 100%;
         border-radius: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .multi-select-options {
+        gap: 4px;
+        padding: 8px;
+    }
+
+    .form-stack .multi-select-option {
+        gap: 7px;
+        min-height: 38px;
+        padding: 8px 6px;
+        font-size: 0.75rem;
     }
 }
