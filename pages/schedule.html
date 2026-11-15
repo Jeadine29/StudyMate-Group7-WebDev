@@ -1,89 +1,241 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>My Study Schedule | StudyMate</title>
+
     <link rel="stylesheet" href="../css/main.css">
-    <script src="../assets/studymate.js" defer></script>
+    <link rel="stylesheet" href="../css/schedule.css">
+
+    <script src="../js/studymate.js" defer></script>
 </head>
+
 <body>
 
-<header class="app-header">
-    <div class="container app-header-inner">
-        <a class="app-brand" href="../index.html">StudyMate</a>
+    <header class="app-header">
+        <div class="container app-header-inner">
 
-        <nav class="app-nav">
-            <a href="dashboard.html">Dashboard</a>
-            <a href="subjects.html">Subjects</a>
-            <a href="schedule.html">Schedule</a>
-            <a href="upload.html">Upload</a>
-            <button data-logout class="btn btn-outline btn-sm">Log out</button>
-        </nav>
-    </div>
-</header>
-
-<main class="container page-shell">
-
-    <div class="page-heading">
-        <p class="eyebrow">PERSONAL STUDY PLANNER</p>
-        <h1>My Study Schedule</h1>
-        <p>Organize your own study activities.</p>
-    </div>
-
-    <section class="content-card">
-        <h2>Add a Study Activity</h2>
-
-        <form id="scheduleForm" class="form-stack">
-
-            <label>
-                Subject or Activity
-                <input
-                    type="text"
-                    name="subject"
-                    placeholder="Example: Computer Programming"
-                    required
+            <a class="app-brand" href="../index.html">
+                <img
+                    src="../assets/icons/studymate-logo.svg"
+                    width="38"
+                    height="38"
+                    alt="StudyMate Logo"
                 >
-            </label>
 
-            <label>
-                Day
-                <select name="day" required>
-                    <option value="">Select a day</option>
-                    <option>Monday</option>
-                    <option>Tuesday</option>
-                    <option>Wednesday</option>
-                    <option>Thursday</option>
-                    <option>Friday</option>
-                    <option>Saturday</option>
-                    <option>Sunday</option>
-                </select>
-            </label>
+                <span>
+                    StudyMate
+                    <small>STUDY • FOCUS • LEARN</small>
+                </span>
+            </a>
 
-            <label>
-                Study Time
-                <input type="time" name="time" required>
-            </label>
+            <nav class="app-nav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="subjects.html">Subjects</a>
+                <a href="schedule.html">Schedule</a>
+                <a href="upload.html">Upload</a>
 
-            <button type="submit" class="btn btn-primary">
-                Add Schedule
-            </button>
+                <button
+                    type="button"
+                    data-logout
+                    class="btn btn-outline btn-sm"
+                >
+                    Log out
+                </button>
+            </nav>
 
-        </form>
-    </section>
-
-    <section class="content-card">
-        <h2>My Activities</h2>
-        <div id="scheduleList">
-            <p class="empty-state">No study schedule yet.</p>
         </div>
-    </section>
+    </header>
 
-    <div class="page-actions">
-        <a href="dashboard.html" class="btn btn-outline">Back to Dashboard</a>
-    </div>
+    <main class="container page-shell">
 
-</main>
+        <div class="page-heading">
+            <p class="eyebrow">PERSONAL STUDY PLANNER</p>
+
+            <h1>My Study Schedule</h1>
+
+            <p>
+                Organize your subjects and manage your weekly study activities.
+            </p>
+        </div>
+
+        <section class="content-card">
+
+            <h2>Add a Study Activity</h2>
+
+            <form id="scheduleForm" class="form-stack">
+
+                <label for="scheduleSubject">
+                    Subject or Activity
+
+                    <input
+                        type="text"
+                        id="scheduleSubject"
+                        name="subject"
+                        placeholder="Example: Computer Programming 1"
+                        required
+                    >
+                </label>
+
+                <div class="schedule-days-group">
+
+                    <label
+                        for="dayDropdownButton"
+                        class="day-selection-label"
+                    >
+                        Class Days
+                    </label>
+
+                    <div class="multi-select" id="dayMultiSelect">
+
+                        <button
+                            type="button"
+                            class="multi-select-trigger"
+                            id="dayDropdownButton"
+                            aria-expanded="false"
+                            aria-controls="dayDropdownOptions"
+                        >
+                            <span id="selectedDaysText">
+                                Select class days
+                            </span>
+
+                            <span class="dropdown-arrow" aria-hidden="true">
+                                ⌄
+                            </span>
+                        </button>
+
+                        <div
+                            class="multi-select-options"
+                            id="dayDropdownOptions"
+                            hidden
+                        >
+
+                            <label class="multi-select-option">
+                                <input type="checkbox" name="day" value="Monday">
+                                <span>Monday</span>
+                            </label>
+
+                            <label class="multi-select-option">
+                                <input type="checkbox" name="day" value="Tuesday">
+                                <span>Tuesday</span>
+                            </label>
+
+                            <label class="multi-select-option">
+                                <input type="checkbox" name="day" value="Wednesday">
+                                <span>Wednesday</span>
+                            </label>
+
+                            <label class="multi-select-option">
+                                <input type="checkbox" name="day" value="Thursday">
+                                <span>Thursday</span>
+                            </label>
+
+                            <label class="multi-select-option">
+                                <input type="checkbox" name="day" value="Friday">
+                                <span>Friday</span>
+                            </label>
+
+                            <label class="multi-select-option">
+                                <input type="checkbox" name="day" value="Saturday">
+                                <span>Saturday</span>
+                            </label>
+
+                            <label class="multi-select-option">
+                                <input type="checkbox" name="day" value="Sunday">
+                                <span>Sunday</span>
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <small class="day-selection-hint">
+                        Select one or more days for your activity.
+                    </small>
+
+                </div>
+
+                <div class="schedule-time-fields">
+
+                    <label for="scheduleStartTime">
+                        Start Time
+
+                        <input
+                            type="time"
+                            id="scheduleStartTime"
+                            name="startTime"
+                            required
+                        >
+                    </label>
+
+                    <label for="scheduleEndTime">
+                        End Time
+
+                        <input
+                            type="time"
+                            id="scheduleEndTime"
+                            name="endTime"
+                            required
+                        >
+                    </label>
+
+                </div>
+
+                <label for="scheduleLocation">
+                    Room / Location
+
+                    <input
+                        type="text"
+                        id="scheduleLocation"
+                        name="location"
+                        placeholder="Example: Room 530"
+                    >
+                </label>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Add Schedule
+                </button>
+
+            </form>
+
+        </section>
+
+        <section class="content-card">
+
+            <div class="section-heading">
+                <h2>Weekly Timetable</h2>
+
+                <p>
+                    Your weekly class schedule will automatically appear here.
+                </p>
+            </div>
+
+            <div id="weeklyTimetable">
+                <div class="empty-state">
+                    <h3>No timetable available</h3>
+                    <p>Add your subjects and schedules to get started.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <div class="page-actions">
+
+            <a
+                href="dashboard.html"
+                class="btn btn-outline"
+            >
+                Back to Dashboard
+            </a>
+
+        </div>
+
+    </main>
 
 </body>
 </html>
