@@ -16,9 +16,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function saveData(key, value) {
         try {
             localStorage.setItem(key, JSON.stringify(value));
+            return true;
         } catch (error) {
             console.error("Unable to save data:", error);
             alert("Unable to save data. Browser storage may be full.");
+            return false;
         }
     }
 
@@ -45,9 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function saveUserData(key, value) {
         const userKey = getUserKey(key);
 
-        if (userKey) {
-            saveData(userKey, value);
-        }
+        if (!userKey) return false;
+
+        return saveData(userKey, value);
     }
 
     function escapeHTML(value) {
@@ -136,12 +138,13 @@ document.addEventListener("DOMContentLoaded", function () {
             };
 
             users.push(newUser);
-            saveData("studyMateUsers", users);
 
-            saveData("studyMateCurrentUser", {
+            if (!saveData("studyMateUsers", users)) return;
+
+            if (!saveData("studyMateCurrentUser", {
                 name: newUser.name,
                 email: newUser.email
-            });
+            })) return;
 
             alert("Registration successful!");
             window.location.href = "dashboard.html";
@@ -215,6 +218,411 @@ document.addEventListener("DOMContentLoaded", function () {
     const uploadForm = document.querySelector("#uploadForm");
     const uploadedFilesContainer = document.querySelector("#uploadedFiles");
 
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    const MAX_EXTRACTED_TEXT = 40000;
+
+    const SUPPORTED_EXTENSIONS = [
+        "txt", "md", "pdf",
+        "docx", "doc",
+        "pptx", "ppt",
+        "xls", "xlsx", "csv",
+        "jpg", "jpeg", "png", "webp",
+        "rtf",
+        "mp4", "mov", "webm"
+    ];
+
+    const LIBRARY_URLS = {
+        pdf: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+        mammoth: "https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js",
+        xlsx: "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js",
+        jszip: "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js",
+        tesseract: "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"
+    };
+
+    const libraryPromises = {};
+
+    function loadLibrary(name) {
+        if (libraryPromises[name]) {
+            return libraryPromises[name];
+        }
+
+        libraryPromises[name] = new Promise(function (resolve, reject) {
+            const existingScript = document.querySelector(
+                'script[data-studymate-library="' + name + '"]'
+            );
+
+            if (existingScript) {
+                if (name === "pdf" && window.pdfjsLib) return resolve();
+                if (name === "mammoth" && window.mammoth) return resolve();
+                if (name === "xlsx" && window.XLSX) return resolve();
+                if (name === "jszip" && window.JSZip) return resolve();
+                if (name === "tesseract" && window.Tesseract) return resolve();
+
+                existingScript.addEventListener("load", resolve, { once: true });
+                existingScript.addEventListener("error", reject, { once: true });
+                return;
+            }
+
+            const script = document.createElement("script");
+
+            script.src = LIBRARY_URLS[name];
+            script.async = true;
+            script.dataset.studymateLibrary = name;
+
+            script.onload = resolve;
+
+            script.onerror = function () {
+                delete libraryPromises[name];
+                reject(new Error("Unable to load " + name + " library."));
+            };
+
+            document.head.appendChild(script);
+        });
+
+        return libraryPromises[name];
+    }
+
+    function getFileExtension(fileName) {
+        const parts = String(fileName).toLowerCase().split(".");
+        return parts.length > 1 ? parts.pop() : "";
+    }
+
+    function readFileAsText(file) {
+        return new Promise(function (resolve, reject) {
+            const reader = new FileReader();
+
+            reader.onload = function () {
+                resolve(String(reader.result || ""));
+            };
+
+            reader.onerror = function () {
+                reject(new Error("Unable to read this file."));
+            };
+
+            reader.readAsText(file);
+        });
+    }
+
+    function readFileAsArrayBuffer(file) {
+        return new Promise(function (resolve, reject) {
+            const reader = new FileReader();
+
+            reader.onload = function () {
+                resolve(reader.result);
+            };
+
+            reader.onerror = function () {
+                reject(new Error("Unable to read this file."));
+            };
+
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    function readFileAsDataURL(file) {
+        return new Promise(function (resolve, reject) {
+            const reader = new FileReader();
+
+            reader.onload = function () {
+                resolve(reader.result);
+            };
+
+            reader.onerror = function () {
+                reject(new Error("Unable to read this image."));
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function cleanExtractedText(text) {
+        return String(text || "")
+            .replace(/\u0000/g, "")
+            .replace(/\r\n/g, "\n")
+            .replace(/\r/g, "\n")
+            .replace(/[ \t]+\n/g, "\n")
+            .replace(/\n{3,}/g, "\n\n")
+            .trim()
+            .substring(0, MAX_EXTRACTED_TEXT);
+    }
+
+    /* PDF extraction */
+
+    async function extractPDFText(file) {
+        await loadLibrary("pdf");
+
+        if (!window.pdfjsLib) {
+            throw new Error("PDF reader could not be initialized.");
+        }
+
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+        const buffer = await readFileAsArrayBuffer(file);
+
+        const pdf = await window.pdfjsLib.getDocument({
+            data: new Uint8Array(buffer)
+        }).promise;
+
+        let fullText = "";
+
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+            const page = await pdf.getPage(pageNumber);
+            const textContent = await page.getTextContent();
+
+            const pageText = textContent.items
+                .map(function (item) {
+                    return item.str || "";
+                })
+                .join(" ");
+
+            fullText += "\n\n" + pageText;
+
+            if (fullText.length >= MAX_EXTRACTED_TEXT) break;
+        }
+
+        return cleanExtractedText(fullText);
+    }
+
+    /* DOCX extraction */
+
+    async function extractDOCXText(file) {
+        await loadLibrary("mammoth");
+
+        if (!window.mammoth) {
+            throw new Error("DOCX reader could not be initialized.");
+        }
+
+        const buffer = await readFileAsArrayBuffer(file);
+
+        const result = await window.mammoth.extractRawText({
+            arrayBuffer: buffer
+        });
+
+        return cleanExtractedText(result.value);
+    }
+
+    /* Excel extraction */
+
+    async function extractSpreadsheetText(file) {
+        await loadLibrary("xlsx");
+
+        if (!window.XLSX) {
+            throw new Error("Spreadsheet reader could not be initialized.");
+        }
+
+        const buffer = await readFileAsArrayBuffer(file);
+
+        const workbook = window.XLSX.read(buffer, {
+            type: "array"
+        });
+
+        let output = "";
+
+        workbook.SheetNames.forEach(function (sheetName) {
+            const sheet = workbook.Sheets[sheetName];
+            const rows = window.XLSX.utils.sheet_to_csv(sheet);
+
+            output += "\n\n" + sheetName + "\n" + rows;
+        });
+
+        return cleanExtractedText(output);
+    }
+
+    /* PowerPoint extraction */
+
+    async function extractPPTXText(file) {
+        await loadLibrary("jszip");
+
+        if (!window.JSZip) {
+            throw new Error("PowerPoint reader could not be initialized.");
+        }
+
+        const buffer = await readFileAsArrayBuffer(file);
+        const zip = await window.JSZip.loadAsync(buffer);
+
+        const slideFiles = Object.keys(zip.files)
+            .filter(function (name) {
+                return /^ppt\/slides\/slide\d+\.xml$/i.test(name);
+            })
+            .sort(function (a, b) {
+                const numberA = Number(a.match(/slide(\d+)/i)?.[1] || 0);
+                const numberB = Number(b.match(/slide(\d+)/i)?.[1] || 0);
+
+                return numberA - numberB;
+            });
+
+        let output = "";
+
+        for (let index = 0; index < slideFiles.length; index++) {
+            const xml = await zip.files[slideFiles[index]].async("text");
+
+            const documentXML = new DOMParser().parseFromString(
+                xml,
+                "application/xml"
+            );
+
+            const paragraphs = Array.from(
+                documentXML.getElementsByTagName("a:p")
+            );
+
+            const slideText = paragraphs.map(function (paragraph) {
+                return Array.from(
+                    paragraph.getElementsByTagName("a:t")
+                ).map(function (node) {
+                    return node.textContent || "";
+                }).join("");
+            }).filter(Boolean).join("\n");
+
+            output += "\n\nSlide " + (index + 1) + "\n" + slideText;
+
+            if (output.length >= MAX_EXTRACTED_TEXT) break;
+        }
+
+        return cleanExtractedText(output);
+    }
+
+    /* Image OCR extraction */
+
+    async function extractImageText(file) {
+        await loadLibrary("tesseract");
+
+        if (!window.Tesseract) {
+            throw new Error("OCR could not be initialized.");
+        }
+
+        const imageData = await readFileAsDataURL(file);
+
+        const result = await window.Tesseract.recognize(
+            imageData,
+            "eng",
+            {
+                logger: function (message) {
+                    if (message.status === "recognizing text") {
+                        console.log(
+                            "OCR progress:",
+                            Math.round((message.progress || 0) * 100) + "%"
+                        );
+                    }
+                }
+            }
+        );
+
+        return cleanExtractedText(result.data.text);
+    }
+
+    /* RTF extraction */
+
+    function extractRTFText(rtfText) {
+        let text = String(rtfText || "");
+
+        text = text.replace(/\\par[d]?/gi, "\n");
+        text = text.replace(/\\tab/gi, "\t");
+        text = text.replace(/\\'[0-9a-f]{2}/gi, "");
+        text = text.replace(/\\u-?\d+\??/gi, "");
+        text = text.replace(/\\[a-zA-Z]+-?\d* ?/g, "");
+        text = text.replace(/[{}]/g, "");
+
+        return cleanExtractedText(text);
+    }
+
+    /* Process uploaded files */
+
+    async function processStudyFile(file) {
+        const extension = getFileExtension(file.name);
+
+        if (!SUPPORTED_EXTENSIONS.includes(extension)) {
+            throw new Error("This file format is not supported.");
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+            throw new Error("File is too large. Maximum file size is 5 MB.");
+        }
+
+        let content = "";
+        let status = "Text extracted successfully";
+        let extractionType = "text";
+
+        switch (extension) {
+            case "txt":
+            case "md":
+            case "csv":
+                content = cleanExtractedText(await readFileAsText(file));
+                break;
+
+            case "pdf":
+                content = await extractPDFText(file);
+                break;
+
+            case "docx":
+                content = await extractDOCXText(file);
+                break;
+
+            case "xlsx":
+            case "xls":
+                content = await extractSpreadsheetText(file);
+                break;
+
+            case "pptx":
+                content = await extractPPTXText(file);
+                break;
+
+            case "jpg":
+            case "jpeg":
+            case "png":
+            case "webp":
+                extractionType = "image-ocr";
+                content = await extractImageText(file);
+                break;
+
+            case "rtf":
+                content = extractRTFText(await readFileAsText(file));
+                break;
+
+            case "doc":
+                extractionType = "unsupported";
+                status = "Old DOC format: text extraction not available";
+                break;
+
+            case "ppt":
+                extractionType = "unsupported";
+                status = "Old PPT format: text extraction not available";
+                break;
+
+            case "mp4":
+            case "mov":
+            case "webm":
+                extractionType = "video";
+                status = "Video saved as a reference only. Transcription is not available.";
+                break;
+
+            default:
+                throw new Error("This file format is not supported.");
+        }
+
+        if (
+            !content &&
+            extractionType !== "video" &&
+            extractionType !== "unsupported"
+        ) {
+            status = "No readable text found in this file";
+        }
+
+        return {
+            id: Date.now() + Math.floor(Math.random() * 100000),
+            name: file.name,
+            type: file.type || extension.toUpperCase() + " file",
+            extension: extension,
+            size: file.size,
+            content: content,
+            extractionType: extractionType,
+            status: status,
+            uploadedAt: new Date().toISOString()
+        };
+    }
+
+    /* Display uploaded files */
+
     function renderUploadedFiles() {
         if (!uploadedFilesContainer) return;
 
@@ -236,6 +644,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="uploaded-file-info">
                         <h3>${escapeHTML(file.name)}</h3>
                         <p>${escapeHTML(file.type || "Study Material")}</p>
+                        <small>${escapeHTML(file.status || "Uploaded")}</small>
                     </div>
 
                     <button type="button" data-delete-file="${index}">
@@ -246,47 +655,118 @@ document.addEventListener("DOMContentLoaded", function () {
         }).join("");
     }
 
+    /* Upload form */
+
     if (uploadForm) {
-        uploadForm.addEventListener("submit", function (event) {
+        uploadForm.addEventListener("submit", async function (event) {
             event.preventDefault();
 
             const fileInput = uploadForm.querySelector('input[type="file"]');
 
+            const submitButton = uploadForm.querySelector(
+                'button[type="submit"], input[type="submit"]'
+            );
+
             if (!fileInput || !fileInput.files.length) {
-                alert("Please select a file first.");
+                alert("Please select at least one file.");
                 return;
             }
 
-            const selectedFile = fileInput.files[0];
-            const reader = new FileReader();
+            const selectedFiles = Array.from(fileInput.files);
 
-            reader.onload = function (readerEvent) {
-                const files = getUserData("studyMateFiles", []);
+            if (submitButton) {
+                submitButton.disabled = true;
 
-                files.push({
-                    id: Date.now(),
-                    name: selectedFile.name,
-                    type: selectedFile.type || "Study Material",
-                    content: readerEvent.target.result,
-                    uploadedAt: new Date().toISOString()
-                });
+                if (submitButton.tagName === "INPUT") {
+                    submitButton.value = "Processing...";
+                } else {
+                    submitButton.textContent = "Processing...";
+                }
+            }
 
-                saveUserData("studyMateFiles", files);
+            let successfulFiles = [];
+            let failedFiles = [];
 
-                uploadForm.reset();
-                renderUploadedFiles();
-                updateDashboard();
+            try {
+                for (const selectedFile of selectedFiles) {
+                    try {
+                        const processedFile = await processStudyFile(selectedFile);
+                        successfulFiles.push(processedFile);
+                    } catch (error) {
+                        console.error(
+                            "File processing error:",
+                            selectedFile.name,
+                            error
+                        );
 
-                alert("Study material uploaded successfully!");
-            };
+                        failedFiles.push({
+                            name: selectedFile.name,
+                            reason: error.message || "Unable to process file."
+                        });
+                    }
+                }
 
-            reader.onerror = function () {
-                alert("Unable to read the selected file.");
-            };
+                if (successfulFiles.length) {
+                    const existingFiles = getUserData("studyMateFiles", []);
+                    const updatedFiles = existingFiles.concat(successfulFiles);
 
-            reader.readAsText(selectedFile);
+                    const saved = saveUserData("studyMateFiles", updatedFiles);
+
+                    if (saved) {
+                        uploadForm.reset();
+
+                        renderUploadedFiles();
+                        renderReviewer();
+                        renderFlashcards();
+                        updateDashboard();
+                    } else {
+                        alert(
+                            "Your files were processed, but browser storage " +
+                            "could not save them. Try deleting old materials."
+                        );
+                    }
+                }
+
+                let message = "";
+
+                if (successfulFiles.length) {
+                    message += successfulFiles.length +
+                        " file(s) processed.\n\n";
+
+                    successfulFiles.forEach(function (file) {
+                        message += "• " + file.name +
+                            "\n  " + file.status + "\n";
+                    });
+                }
+
+                if (failedFiles.length) {
+                    message += "\nSome files could not be processed:\n";
+
+                    failedFiles.forEach(function (file) {
+                        message += "• " + file.name +
+                            "\n  " + file.reason + "\n";
+                    });
+                }
+
+                if (message) {
+                    alert(message);
+                }
+
+            } finally {
+                if (submitButton) {
+                    submitButton.disabled = false;
+
+                    if (submitButton.tagName === "INPUT") {
+                        submitButton.value = "Upload Material";
+                    } else {
+                        submitButton.textContent = "Upload Material";
+                    }
+                }
+            }
         });
     }
+
+    /* Delete uploaded files */
 
     if (uploadedFilesContainer) {
         uploadedFilesContainer.addEventListener("click", function (event) {
@@ -302,10 +782,13 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!confirm("Delete this study material?")) return;
 
             files.splice(index, 1);
-            saveUserData("studyMateFiles", files);
 
-            renderUploadedFiles();
-            updateDashboard();
+            if (saveUserData("studyMateFiles", files)) {
+                renderUploadedFiles();
+                renderReviewer();
+                renderFlashcards();
+                updateDashboard();
+            }
         });
 
         renderUploadedFiles();
@@ -331,18 +814,33 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         reviewerContent.innerHTML = files.map(function (file, index) {
+            const content = file.content || "";
+
             return `
                 <article class="reviewer-card">
                     <h3>${escapeHTML(file.name)}</h3>
-                    <p>${escapeHTML((file.content || "").substring(0, 500))}</p>
 
-                    <button type="button" data-view-reviewer="${index}">
-                        View Material
-                    </button>
+                    <p>
+                        ${escapeHTML(content.substring(0, 500) ||
+                            file.status || "No extracted text available.")}
+                    </p>
 
-                    <div id="reviewer-full-${index}" hidden>
-                        <p>${escapeHTML(file.content || "")}</p>
-                    </div>
+                    ${content ? `
+                        <button
+                            type="button"
+                            data-view-reviewer="${index}"
+                        >
+                            View Material
+                        </button>
+
+                        <div id="reviewer-full-${index}" hidden>
+                            <p>${escapeHTML(content)}</p>
+                        </div>
+                    ` : `
+                        <p>
+                            <small>${escapeHTML(file.status || "No text available.")}</small>
+                        </p>
+                    `}
                 </article>
             `;
         }).join("");
@@ -361,6 +859,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!content) return;
 
             content.hidden = !content.hidden;
+
             button.textContent = content.hidden
                 ? "View Material"
                 : "Hide Material";
@@ -583,7 +1082,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function saveSchedules(schedules) {
-        saveUserData("studyMateSchedule", schedules);
+        return saveUserData("studyMateSchedule", schedules);
     }
 
     function getFormDays(form) {
@@ -771,7 +1270,8 @@ document.addEventListener("DOMContentLoaded", function () {
             schedules.push(newSchedule);
         }
 
-        saveSchedules(schedules);
+        if (!saveSchedules(schedules)) return false;
+
         renderSchedule();
         renderWeeklyTimetable();
 
@@ -893,6 +1393,7 @@ document.addEventListener("DOMContentLoaded", function () {
         scheduleForm.addEventListener("submit", function (event) {
             event.preventDefault();
 
+            const wasEditing = editingScheduleId !== null;
             const success = saveScheduleFromForm(scheduleForm);
 
             if (success) {
@@ -904,7 +1405,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 alert(
-                    editingScheduleId
+                    wasEditing
                         ? "Schedule updated successfully!"
                         : "Schedule added successfully!"
                 );
@@ -930,9 +1431,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     return String(item.id) !== String(id);
                 });
 
-                saveSchedules(updatedSchedules);
-                renderSchedule();
-                renderWeeklyTimetable();
+                if (saveSchedules(updatedSchedules)) {
+                    renderSchedule();
+                    renderWeeklyTimetable();
+                }
             }
 
             if (editButton) {
@@ -1092,7 +1594,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const results = getUserData("studyMateResults", []);
 
             results.push(result);
-            saveUserData("studyMateResults", results);
+
+            if (!saveUserData("studyMateResults", results)) return;
 
             alert(
                 "Quiz completed!\nYour score: " +
