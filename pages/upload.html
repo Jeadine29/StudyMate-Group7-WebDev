@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +15,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="../css/main.css">
 
-    <!-- JavaScript -->
+    <!-- StudyMate JavaScript -->
     <script src="../js/studymate.js" defer></script>
 </head>
 
@@ -25,7 +26,12 @@
         <div class="container app-header-inner">
 
             <a class="app-brand" href="../index.html">
-                <img src="../assets/icons/studymate-logo.svg" width="38" height="38" alt="StudyMate Logo">
+                <img
+                    src="../assets/icons/studymate-logo.svg"
+                    width="38"
+                    height="38"
+                    alt="StudyMate Logo"
+                >
 
                 <span>
                     StudyMate
@@ -39,7 +45,11 @@
                 <a href="schedule.html">Schedule</a>
                 <a href="upload.html">Upload</a>
 
-                <button type="button" class="btn btn-outline btn-sm" data-logout>
+                <button
+                    type="button"
+                    class="btn btn-outline btn-sm"
+                    data-logout
+                >
                     Log Out
                 </button>
             </nav>
@@ -52,14 +62,16 @@
 
         <!-- Page Heading -->
         <section class="page-heading">
+
             <p class="eyebrow">YOUR PERSONAL STUDY SPACE</p>
 
             <h1>Upload Materials</h1>
 
             <p>
-                Upload your lesson materials and organize your study resources
-                in one place.
+                Upload your lesson materials and organize your
+                study resources in one place.
             </p>
+
         </section>
 
         <!-- Upload Section -->
@@ -68,7 +80,8 @@
             <h2>Upload Your Lessons</h2>
 
             <p class="helper-text">
-                Select the lesson files you want to add to your StudyMate account.
+                Select the lesson files you want to add to your
+                StudyMate account.
             </p>
 
             <form id="uploadForm" class="form-stack">
@@ -80,17 +93,40 @@
                         type="file"
                         id="material"
                         name="material"
-                        accept=".txt,.md"
+                        accept="
+                            .txt,
+                            .md,
+                            .pdf,
+                            .doc,
+                            .docx,
+                            .rtf,
+                            .ppt,
+                            .pptx,
+                            .xls,
+                            .xlsx,
+                            .csv,
+                            .jpg,
+                            .jpeg,
+                            .png,
+                            .webp,
+                            .mp4,
+                            .mov,
+                            .webm
+                        "
                         multiple
                         required
                     >
                 </label>
 
+                
                 <p class="helper-text">
-                    Supported file formats: TXT and MD.
+                    You can select multiple files at once.
                 </p>
 
-                <button type="submit" class="btn btn-primary">
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+            >
                     Add to My Materials
                 </button>
 
@@ -108,29 +144,36 @@
             </p>
 
             <ul id="uploadedFiles" class="file-list">
+
                 <li class="empty-state">
                     No materials uploaded yet.
                 </li>
+
             </ul>
 
         </section>
 
-        <!-- Prototype Information -->
+        <!-- Information -->
         <p class="demo-note">
-            Note: StudyMate currently supports TXT and MD lesson files
-            for reading and displaying lesson content. PDF, Word,
-            PowerPoint, and AI document analysis will be added in a
-            future version.
+            StudyMate supports different types of learning materials.
+            File content extraction and AI analysis depend on the
+            supported processing features of each file type.
         </p>
 
         <!-- Page Navigation -->
         <div class="page-actions">
 
-            <a href="dashboard.html" class="btn btn-outline">
+            <a
+                href="dashboard.html"
+                class="btn btn-outline"
+            >
                 Back to Dashboard
             </a>
 
-            <a href="reviewer.html" class="btn btn-primary">
+            <a
+                href="reviewer.html"
+                class="btn btn-primary"
+            >
                 Open Reviewer
             </a>
 
@@ -140,9 +183,11 @@
 
     <!-- Footer -->
     <footer class="app-footer">
+
         <div class="container">
             © 2026 StudyMate | STUDY • FOCUS • LEARN
         </div>
+
     </footer>
 
 </body>
