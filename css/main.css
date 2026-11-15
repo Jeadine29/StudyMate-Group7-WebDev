@@ -1216,16 +1216,19 @@ textarea {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 62px;
-    min-width: 220px;
-    padding: 14px 28px;
+
+    width: fit-content;
+    min-width: unset;
+    min-height: unset;
+
+    padding: 9px 16px;
 
     background: #ffffff;
     color: var(--primary);
     border: 1px solid var(--border);
-    border-radius: 13px;
+    border-radius: 10px;
 
-    font-size: 1rem;
+    font-size: 0.875rem;
     font-weight: 700;
     text-decoration: none;
 
@@ -1235,7 +1238,6 @@ textarea {
 .back-button:hover {
     background: var(--primary-soft);
     border-color: var(--primary);
-    transform: translateY(-1px);
 }
 
 /* Hero Image Responsive Design */
