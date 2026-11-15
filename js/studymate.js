@@ -1,110 +1,180 @@
-// StudyMate main JavaScript
-
-function getData(key, fallback = []) {
-    try {
-        return JSON.parse(localStorage.getItem(key)) ?? fallback;
-    } catch {
-        return fallback;
-    }
-}
-
-function saveData(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-}
-
-function getUser() {
-    return getData("studyMateCurrentUser", null);
-}
-
-function userKey(name) {
-    const user = getUser();
-    return user ? name + "_" + encodeURIComponent(user.email) : name;
-}
-
-function getUserData(name, fallback = []) {
-    return getData(userKey(name), fallback);
-}
-
-function saveUserData(name, value) {
-    saveData(userKey(name), value);
-}
-
-function requireLogin() {
-    const isPagesFolder = location.pathname.includes("/pages/");
-    const currentPage = location.pathname.split("/").pop();
-    const publicPages = ["login.html", "register.html"];
-
-    if (isPagesFolder && !publicPages.includes(currentPage) && !getUser()) {
-        alert("Please log in first to access your study space.");
-        location.href = "login.html";
-        return false;
-    }
-
-    return true;
-}
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Protect private pages
-    if (!requireLogin()) return;
+    /* Storage helpers */
 
-    // Register
+    function getData(key, fallback = []) {
+        try {
+            const saved = localStorage.getItem(key);
+            return saved ? JSON.parse(saved) : fallback;
+        } catch (error) {
+            console.error("Storage error:", error);
+            return fallback;
+        }
+    }
+
+    function saveData(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (error) {
+            console.error("Unable to save data:", error);
+            alert("Unable to save data. Browser storage may be full.");
+        }
+    }
+
+    function getCurrentUser() {
+        return getData("studyMateCurrentUser", null);
+    }
+
+    function getUserKey(key) {
+        const user = getCurrentUser();
+
+        if (!user || !user.email) return null;
+
+        return key + "_" + encodeURIComponent(user.email.toLowerCase());
+    }
+
+    function getUserData(key, fallback = []) {
+        const userKey = getUserKey(key);
+
+        if (!userKey) return fallback;
+
+        return getData(userKey, fallback);
+    }
+
+    function saveUserData(key, value) {
+        const userKey = getUserKey(key);
+
+        if (userKey) {
+            saveData(userKey, value);
+        }
+    }
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (character) {
+            const entities = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            };
+
+            return entities[character];
+        });
+    }
+
+    /* Login protection */
+
+    const isLoginPage = document.querySelector("#loginForm");
+    const isRegisterPage = document.querySelector("#registerForm");
+    const isPublicPage = isLoginPage || isRegisterPage;
+    const currentUser = getCurrentUser();
+
+    if (!currentUser && !isPublicPage) {
+        if (window.location.pathname.includes("/pages/")) {
+            window.location.href = "login.html";
+            return;
+        }
+    }
+
+    /* Register */
+
     const registerForm = document.querySelector("#registerForm");
 
     if (registerForm) {
         registerForm.addEventListener("submit", function (event) {
             event.preventDefault();
 
-            const name = registerForm.elements.namedItem("fullname").value.trim();
-            const email = registerForm.elements.namedItem("email").value.trim().toLowerCase();
-            const password = registerForm.elements.namedItem("password").value;
-            const confirmPassword = registerForm.elements.namedItem("confirmPassword").value;
+            const fullName =
+                registerForm.elements.namedItem("fullname")?.value.trim() ||
+                registerForm.elements.namedItem("name")?.value.trim();
 
-            if (password.length < 6) {
-                alert("Password must have at least 6 characters.");
+            const email = registerForm.elements
+                .namedItem("email")?.value.trim().toLowerCase();
+
+            const password = registerForm.elements
+                .namedItem("password")?.value;
+
+            const confirmPassword = registerForm.elements
+                .namedItem("confirmPassword")?.value;
+
+            if (!fullName || !email || !password) {
+                alert("Please complete all required fields.");
                 return;
             }
 
-            if (password !== confirmPassword) {
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters.");
+                return;
+            }
+
+            if (
+                confirmPassword !== undefined &&
+                password !== confirmPassword
+            ) {
                 alert("Passwords do not match.");
                 return;
             }
 
             const users = getData("studyMateUsers", []);
 
-            if (users.some(user => user.email === email)) {
+            const existingUser = users.find(function (user) {
+                return user.email.toLowerCase() === email;
+            });
+
+            if (existingUser) {
                 alert("This email is already registered.");
                 return;
             }
 
-            users.push({
-                name: name,
+            const newUser = {
+                name: fullName,
                 email: email,
-                password: password
-            });
+                password: password,
+                createdAt: new Date().toISOString()
+            };
 
+            users.push(newUser);
             saveData("studyMateUsers", users);
 
-            alert("Registration successful! You can now log in.");
-            location.href = "login.html";
+            saveData("studyMateCurrentUser", {
+                name: newUser.name,
+                email: newUser.email
+            });
+
+            alert("Registration successful!");
+            window.location.href = "dashboard.html";
         });
     }
 
-    // Login
+    /* Login */
+
     const loginForm = document.querySelector("#loginForm");
 
     if (loginForm) {
         loginForm.addEventListener("submit", function (event) {
             event.preventDefault();
 
-            const email = loginForm.elements.namedItem("email").value.trim().toLowerCase();
-            const password = loginForm.elements.namedItem("password").value;
+            const email = loginForm.elements
+                .namedItem("email")?.value.trim().toLowerCase();
+
+            const password = loginForm.elements
+                .namedItem("password")?.value;
+
+            if (!email || !password) {
+                alert("Please enter your email and password.");
+                return;
+            }
 
             const users = getData("studyMateUsers", []);
 
-            const account = users.find(user =>
-                user.email === email && user.password === password
-            );
+            const account = users.find(function (user) {
+                return (
+                    user.email.toLowerCase() === email &&
+                    user.password === password
+                );
+            });
 
             if (!account) {
                 alert("Incorrect email or password.");
@@ -116,306 +186,1029 @@ document.addEventListener("DOMContentLoaded", function () {
                 email: account.email
             });
 
-            location.href = "dashboard.html";
+            alert("Login successful!");
+            window.location.href = "dashboard.html";
         });
     }
 
-    // Display logged-in user's name
-    const user = getUser();
+    /* User name */
 
-    document.querySelectorAll("[data-user-name]").forEach(element => {
-        element.textContent = user ? user.name : "Student";
+    document.querySelectorAll("[data-user-name]").forEach(function (element) {
+        const user = getCurrentUser();
+
+        if (user) {
+            element.textContent = user.name;
+        }
     });
 
-    // Logout
-    document.querySelectorAll("[data-logout]").forEach(button => {
+    /* Logout */
+
+    document.querySelectorAll("[data-logout]").forEach(function (button) {
         button.addEventListener("click", function () {
             localStorage.removeItem("studyMateCurrentUser");
-            location.href = "../index.html";
+            window.location.href = "../index.html";
         });
     });
 
-    // Upload lesson materials
+    /* Upload materials */
+
     const uploadForm = document.querySelector("#uploadForm");
+    const uploadedFilesContainer = document.querySelector("#uploadedFiles");
 
-    if (uploadForm) {
-        const fileInput = uploadForm.elements.namedItem("material");
-        const fileList = document.querySelector("#uploadedFiles");
+    function renderUploadedFiles() {
+        if (!uploadedFilesContainer) return;
 
-        function displayFiles() {
-            const files = getUserData("studyMateFiles", []);
-
-            if (!fileList) return;
-
-            if (files.length === 0) {
-                fileList.innerHTML = "<li class='empty-state'>No materials uploaded yet. Upload a lesson to get started.</li>";
-                return;
-            }
-
-            fileList.innerHTML = files.map((file, index) => `
-                <li class="file-row">
-                    <span>📄 ${escapeHTML(file.name)}</span>
-                    <button type="button" class="btn btn-outline btn-sm" data-remove="${index}">
-                        Remove
-                    </button>
-                </li>
-            `).join("");
-
-            fileList.querySelectorAll("[data-remove]").forEach(button => {
-                button.addEventListener("click", function () {
-                    const files = getUserData("studyMateFiles", []);
-                    files.splice(Number(button.dataset.remove), 1);
-                    saveUserData("studyMateFiles", files);
-                    displayFiles();
-                });
-            });
-        }
-
-        uploadForm.addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            const selectedFiles = Array.from(fileInput.files);
-
-            if (selectedFiles.length === 0) {
-                alert("Please select a lesson file.");
-                return;
-            }
-
-            const allowedFiles = selectedFiles.filter(file =>
-                file.name.endsWith(".txt") || file.name.endsWith(".md")
-            );
-
-            if (allowedFiles.length !== selectedFiles.length) {
-                alert("For this prototype, please upload TXT or MD lesson files. PDF and Word text extraction still needs to be added.");
-                return;
-            }
-
-            Promise.all(allowedFiles.map(file => {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-
-                    reader.onload = function () {
-                        resolve({
-                            name: file.name,
-                            content: reader.result
-                        });
-                    };
-
-                    reader.onerror = reject;
-                    reader.readAsText(file);
-                });
-            })).then(newFiles => {
-                const files = getUserData("studyMateFiles", []);
-                saveUserData("studyMateFiles", files.concat(newFiles));
-
-                uploadForm.reset();
-                displayFiles();
-
-                alert("Your lesson has been uploaded successfully!");
-            }).catch(() => {
-                alert("Unable to read the selected file.");
-            });
-        });
-
-        displayFiles();
-    }
-
-    // Display reviewer based on uploaded lessons
-    const reviewerContent = document.querySelector("#reviewerContent");
-
-    if (reviewerContent) {
         const files = getUserData("studyMateFiles", []);
 
-        if (files.length === 0) {
-            reviewerContent.innerHTML = `
+        if (!files.length) {
+            uploadedFilesContainer.innerHTML = `
                 <div class="empty-state">
-                    <h2>No reviewer available yet.</h2>
-                    <p>Upload your lesson materials first to view your reviewer.</p>
-                    <a href="upload.html" class="btn btn-primary">Upload Materials</a>
+                    <h3>No study materials yet</h3>
+                    <p>Upload your first lesson to get started.</p>
                 </div>
-            `;
-        } else {
-            reviewerContent.innerHTML = files.map(file => {
-                const lines = file.content
-                    .split(/\n+/)
-                    .map(line => line.trim())
-                    .filter(line => line.length > 0);
-
-                return `
-                    <article class="content-card">
-                        <h2>${escapeHTML(file.name)}</h2>
-                        ${lines.map(line => `<p>${escapeHTML(line)}</p>`).join("")}
-                    </article>
-                `;
-            }).join("");
-        }
-    }
-
-    // Generate simple flashcards from uploaded lesson text
-    const flashcardContent = document.querySelector("#flashcardContent");
-
-    if (flashcardContent) {
-        const files = getUserData("studyMateFiles", []);
-
-        const sentences = files.flatMap(file =>
-            file.content
-                .split(/[.!?\n]+/)
-                .map(sentence => sentence.trim())
-                .filter(sentence => sentence.length > 15)
-        );
-
-        if (sentences.length === 0) {
-            flashcardContent.innerHTML = `
-                <div class="empty-state">
-                    <h2>No flashcards available yet.</h2>
-                    <p>Upload a TXT or MD lesson first to create study cards.</p>
-                    <a href="upload.html" class="btn btn-primary">Upload Materials</a>
-                </div>
-            `;
-        } else {
-            flashcardContent.innerHTML = sentences.map((sentence, index) => `
-                <details class="flashcard-item">
-                    <summary>
-                        <span>FLASHCARD ${index + 1}</span>
-                        <strong>What is an important point from your lesson?</strong>
-                        <small>Click to reveal answer</small>
-                    </summary>
-                    <p>${escapeHTML(sentence)}.</p>
-                </details>
-            `).join("");
-        }
-    }
-
-    // Personal study schedule
-    const scheduleForm = document.querySelector("#scheduleForm");
-    const scheduleList = document.querySelector("#scheduleList");
-
-    function displaySchedule() {
-        if (!scheduleList) return;
-
-        const schedule = getUserData("studyMateSchedule", []);
-
-        if (schedule.length === 0) {
-            scheduleList.innerHTML = `
-                <p class="empty-state">
-                    No study schedule yet. Add your first study activity above.
-                </p>
             `;
             return;
         }
 
-        scheduleList.innerHTML = schedule.map((item, index) => `
-            <div class="content-card">
-                <h3>${escapeHTML(item.subject)}</h3>
-                <p>${escapeHTML(item.day)} · ${escapeHTML(item.time)}</p>
-                <button type="button" class="btn btn-outline btn-sm" data-delete-schedule="${index}">
-                    Delete
-                </button>
-            </div>
-        `).join("");
+        uploadedFilesContainer.innerHTML = files.map(function (file, index) {
+            return `
+                <div class="uploaded-file">
+                    <div class="uploaded-file-info">
+                        <h3>${escapeHTML(file.name)}</h3>
+                        <p>${escapeHTML(file.type || "Study Material")}</p>
+                    </div>
 
-        scheduleList.querySelectorAll("[data-delete-schedule]").forEach(button => {
-            button.addEventListener("click", function () {
-                const schedule = getUserData("studyMateSchedule", []);
-                schedule.splice(Number(button.dataset.deleteSchedule), 1);
-                saveUserData("studyMateSchedule", schedule);
-                displaySchedule();
+                    <button type="button" data-delete-file="${index}">
+                        Delete
+                    </button>
+                </div>
+            `;
+        }).join("");
+    }
+
+    if (uploadForm) {
+        uploadForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const fileInput = uploadForm.querySelector('input[type="file"]');
+
+            if (!fileInput || !fileInput.files.length) {
+                alert("Please select a file first.");
+                return;
+            }
+
+            const selectedFile = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (readerEvent) {
+                const files = getUserData("studyMateFiles", []);
+
+                files.push({
+                    id: Date.now(),
+                    name: selectedFile.name,
+                    type: selectedFile.type || "Study Material",
+                    content: readerEvent.target.result,
+                    uploadedAt: new Date().toISOString()
+                });
+
+                saveUserData("studyMateFiles", files);
+
+                uploadForm.reset();
+                renderUploadedFiles();
+                updateDashboard();
+
+                alert("Study material uploaded successfully!");
+            };
+
+            reader.onerror = function () {
+                alert("Unable to read the selected file.");
+            };
+
+            reader.readAsText(selectedFile);
+        });
+    }
+
+    if (uploadedFilesContainer) {
+        uploadedFilesContainer.addEventListener("click", function (event) {
+            const button = event.target.closest("[data-delete-file]");
+
+            if (!button) return;
+
+            const index = Number(button.dataset.deleteFile);
+            const files = getUserData("studyMateFiles", []);
+
+            if (!files[index]) return;
+
+            if (!confirm("Delete this study material?")) return;
+
+            files.splice(index, 1);
+            saveUserData("studyMateFiles", files);
+
+            renderUploadedFiles();
+            updateDashboard();
+        });
+
+        renderUploadedFiles();
+    }
+
+    /* Reviewer */
+
+    const reviewerContent = document.querySelector("#reviewerContent");
+
+    function renderReviewer() {
+        if (!reviewerContent) return;
+
+        const files = getUserData("studyMateFiles", []);
+
+        if (!files.length) {
+            reviewerContent.innerHTML = `
+                <div class="empty-state">
+                    <h3>No reviewer available</h3>
+                    <p>Upload your study materials first.</p>
+                </div>
+            `;
+            return;
+        }
+
+        reviewerContent.innerHTML = files.map(function (file, index) {
+            return `
+                <article class="reviewer-card">
+                    <h3>${escapeHTML(file.name)}</h3>
+                    <p>${escapeHTML((file.content || "").substring(0, 500))}</p>
+
+                    <button type="button" data-view-reviewer="${index}">
+                        View Material
+                    </button>
+
+                    <div id="reviewer-full-${index}" hidden>
+                        <p>${escapeHTML(file.content || "")}</p>
+                    </div>
+                </article>
+            `;
+        }).join("");
+    }
+
+    if (reviewerContent) {
+        reviewerContent.addEventListener("click", function (event) {
+            const button = event.target.closest("[data-view-reviewer]");
+
+            if (!button) return;
+
+            const content = document.querySelector(
+                "#reviewer-full-" + button.dataset.viewReviewer
+            );
+
+            if (!content) return;
+
+            content.hidden = !content.hidden;
+            button.textContent = content.hidden
+                ? "View Material"
+                : "Hide Material";
+        });
+
+        renderReviewer();
+    }
+
+    /* Flashcards */
+
+    const flashcardContent = document.querySelector("#flashcardContent");
+
+    function createFlashcardsFromText(text) {
+        if (!text) return [];
+
+        const lines = text
+            .split(/\n/)
+            .map(line => line.trim())
+            .filter(Boolean);
+
+        return lines.reduce(function (cards, line) {
+            const separator = line.indexOf(":");
+
+            if (separator > 0) {
+                cards.push({
+                    question: line.substring(0, separator).trim(),
+                    answer: line.substring(separator + 1).trim()
+                });
+            }
+
+            return cards;
+        }, []);
+    }
+
+    function renderFlashcards() {
+        if (!flashcardContent) return;
+
+        const files = getUserData("studyMateFiles", []);
+
+        if (!files.length) {
+            flashcardContent.innerHTML = `
+                <div class="empty-state">
+                    <h3>No flashcards available</h3>
+                    <p>Upload your study materials first.</p>
+                </div>
+            `;
+            return;
+        }
+
+        let allCards = [];
+
+        files.forEach(function (file) {
+            createFlashcardsFromText(file.content || "").forEach(function (card) {
+                allCards.push({
+                    ...card,
+                    source: file.name
+                });
             });
         });
+
+        if (!allCards.length) {
+            flashcardContent.innerHTML = `
+                <div class="empty-state">
+                    <h3>No flashcards generated</h3>
+                    <p>Use this format in your text: Term: Definition</p>
+                </div>
+            `;
+            return;
+        }
+
+        flashcardContent.innerHTML = allCards.map(function (card, index) {
+            return `
+                <div class="flashcard" data-flashcard="${index}">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <h3>${escapeHTML(card.question)}</h3>
+                            <p>Click to reveal answer</p>
+                        </div>
+
+                        <div class="flashcard-back">
+                            <p>${escapeHTML(card.answer)}</p>
+                        </div>
+                    </div>
+
+                    <small>${escapeHTML(card.source)}</small>
+                </div>
+            `;
+        }).join("");
+
+        flashcardContent.querySelectorAll(".flashcard").forEach(function (card) {
+            card.addEventListener("click", function () {
+                card.classList.toggle("flipped");
+            });
+        });
+    }
+
+    if (flashcardContent) {
+        renderFlashcards();
+    }
+
+    /* Schedule */
+
+    const scheduleForm = document.querySelector("#scheduleForm");
+    const scheduleList = document.querySelector("#scheduleList");
+
+    const dayDropdownButton = document.querySelector("#dayDropdownButton");
+    const dayDropdownOptions = document.querySelector("#dayDropdownOptions");
+    const selectedDaysText = document.querySelector("#selectedDaysText");
+    const dayMultiSelect = document.querySelector("#dayMultiSelect");
+
+    const WEEK_DAYS = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+    ];
+
+    let editingScheduleId = null;
+
+    function normalizeDay(day) {
+        if (!day) return null;
+
+        const value = String(day).trim().toLowerCase();
+
+        const dayMap = {
+            mon: "Monday",
+            monday: "Monday",
+            tue: "Tuesday",
+            tues: "Tuesday",
+            tuesday: "Tuesday",
+            wed: "Wednesday",
+            wednesday: "Wednesday",
+            thu: "Thursday",
+            thur: "Thursday",
+            thurs: "Thursday",
+            thursday: "Thursday",
+            fri: "Friday",
+            friday: "Friday",
+            sat: "Saturday",
+            saturday: "Saturday",
+            sun: "Sunday",
+            sunday: "Sunday"
+        };
+
+        return dayMap[value] || null;
+    }
+
+    function timeToMinutes(time) {
+        if (!time || !/^\d{2}:\d{2}$/.test(time)) return null;
+
+        const parts = time.split(":");
+        const hours = Number(parts[0]);
+        const minutes = Number(parts[1]);
+
+        if (hours > 23 || minutes > 59) return null;
+
+        return hours * 60 + minutes;
+    }
+
+    function addMinutesToTime(time, amount) {
+        const minutes = timeToMinutes(time);
+
+        if (minutes === null) return "";
+
+        const newMinutes = (minutes + amount) % 1440;
+        const hours = Math.floor(newMinutes / 60);
+        const remainingMinutes = newMinutes % 60;
+
+        return (
+            String(hours).padStart(2, "0") +
+            ":" +
+            String(remainingMinutes).padStart(2, "0")
+        );
+    }
+
+    function formatTime(time) {
+        const minutes = timeToMinutes(time);
+
+        if (minutes === null) return time || "";
+
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        const period = hours >= 12 ? "PM" : "AM";
+        const displayHour = hours % 12 || 12;
+
+        return displayHour + ":" +
+            String(remainingMinutes).padStart(2, "0") +
+            " " + period;
+    }
+
+    function getSchedules() {
+        const schedules = getUserData("studyMateSchedule", []);
+
+        if (!Array.isArray(schedules)) return [];
+
+        return schedules.map(function (item, index) {
+            const days = Array.isArray(item.days)
+                ? item.days
+                : item.day
+                    ? [item.day]
+                    : [];
+
+            const startTime = item.startTime || item.time || "";
+            const endTime = item.endTime ||
+                (startTime ? addMinutesToTime(startTime, 60) : "");
+
+            return {
+                ...item,
+                id: item.id || Date.now() + index,
+                subject: item.subject || "Untitled Subject",
+                days: [...new Set(days.map(normalizeDay).filter(Boolean))],
+                startTime: startTime,
+                endTime: endTime,
+                location: item.location || item.room || ""
+            };
+        });
+    }
+
+    function saveSchedules(schedules) {
+        saveUserData("studyMateSchedule", schedules);
+    }
+
+    function getFormDays(form) {
+        const fields = form.querySelectorAll(
+            'input[name="day"], input[name="days"], input[name="scheduleDay"]'
+        );
+
+        let days = Array.from(fields)
+            .filter(field => field.type === "checkbox" && field.checked)
+            .map(field => normalizeDay(field.value))
+            .filter(Boolean);
+
+        if (!days.length) {
+            const select = form.querySelector(
+                'select[name="day"], select[name="days"]'
+            );
+
+            if (select) {
+                const values = select.multiple
+                    ? Array.from(select.selectedOptions).map(option => option.value)
+                    : [select.value];
+
+                days = values.map(normalizeDay).filter(Boolean);
+            }
+        }
+
+        return [...new Set(days)];
+    }
+
+    function getSelectedDays() {
+        return scheduleForm ? getFormDays(scheduleForm) : [];
+    }
+
+    function updateSelectedDaysText() {
+        if (!selectedDaysText) return;
+
+        const days = getSelectedDays();
+
+        selectedDaysText.textContent = days.length
+            ? days.join(", ")
+            : "Select days";
+    }
+
+    if (dayDropdownButton && dayDropdownOptions) {
+        dayDropdownButton.addEventListener("click", function (event) {
+            event.stopPropagation();
+
+            dayDropdownOptions.hidden = !dayDropdownOptions.hidden;
+
+            dayDropdownButton.setAttribute(
+                "aria-expanded",
+                String(!dayDropdownOptions.hidden)
+            );
+        });
+
+        document.addEventListener("click", function (event) {
+            if (dayMultiSelect && !dayMultiSelect.contains(event.target)) {
+                dayDropdownOptions.hidden = true;
+                dayDropdownButton.setAttribute("aria-expanded", "false");
+            }
+        });
+    }
+
+    if (scheduleForm) {
+        scheduleForm.querySelectorAll(
+            'input[name="day"], input[name="days"], input[name="scheduleDay"]'
+        ).forEach(function (checkbox) {
+            checkbox.addEventListener("change", updateSelectedDaysText);
+        });
+    }
+
+    function findScheduleConflict(newSchedule, schedules, excludedId = null) {
+        const newStart = timeToMinutes(newSchedule.startTime);
+        const newEnd = timeToMinutes(newSchedule.endTime);
+
+        if (newStart === null || newEnd === null) return null;
+
+        return schedules.find(function (existing) {
+            if (String(existing.id) === String(excludedId)) return false;
+
+            const existingStart = timeToMinutes(existing.startTime);
+            const existingEnd = timeToMinutes(existing.endTime);
+
+            if (existingStart === null || existingEnd === null) return false;
+
+            const sameDay = existing.days.some(function (day) {
+                return newSchedule.days.includes(day);
+            });
+
+            if (!sameDay) return false;
+
+            return newStart < existingEnd && newEnd > existingStart;
+        }) || null;
+    }
+
+    function getFieldValue(form, names) {
+        for (const name of names) {
+            const field = form.elements.namedItem(name);
+
+            if (field && typeof field.value === "string") {
+                return field.value.trim();
+            }
+        }
+
+        return "";
+    }
+
+    function saveScheduleFromForm(form, subjectOverride = "") {
+        const subject = subjectOverride ||
+            form.dataset.subject ||
+            getFieldValue(form, ["subject", "title", "activity"]);
+
+        const days = getFormDays(form);
+
+        const startTime = getFieldValue(form, [
+            "startTime", "start", "time"
+        ]);
+
+        let endTime = getFieldValue(form, [
+            "endTime", "end"
+        ]);
+
+        const location = getFieldValue(form, [
+            "location", "room", "venue"
+        ]);
+
+        if (!endTime && startTime) {
+            endTime = addMinutesToTime(startTime, 60);
+        }
+
+        if (!subject || !days.length || !startTime || !endTime) {
+            alert("Please complete the subject, days, start time, and end time.");
+            return false;
+        }
+
+        const start = timeToMinutes(startTime);
+        const end = timeToMinutes(endTime);
+
+        if (start === null || end === null || end <= start) {
+            alert("Please enter a valid start and end time.");
+            return false;
+        }
+
+        const schedules = getSchedules();
+
+        const newSchedule = {
+            id: editingScheduleId || Date.now(),
+            subject: subject,
+            days: days,
+            startTime: startTime,
+            endTime: endTime,
+            time: startTime,
+            location: location
+        };
+
+        const conflict = findScheduleConflict(
+            newSchedule,
+            schedules,
+            editingScheduleId
+        );
+
+        if (conflict) {
+            alert(
+                "Schedule conflict detected!\n\n" +
+                conflict.subject + " already has a schedule on " +
+                days.filter(day => conflict.days.includes(day)).join(", ") +
+                " from " + formatTime(conflict.startTime) +
+                " to " + formatTime(conflict.endTime) + "."
+            );
+
+            return false;
+        }
+
+        if (editingScheduleId) {
+            const index = schedules.findIndex(function (item) {
+                return String(item.id) === String(editingScheduleId);
+            });
+
+            if (index !== -1) {
+                schedules[index] = newSchedule;
+            }
+
+            editingScheduleId = null;
+        } else {
+            schedules.push(newSchedule);
+        }
+
+        saveSchedules(schedules);
+        renderSchedule();
+        renderWeeklyTimetable();
+
+        return true;
+    }
+
+    function renderSchedule() {
+        if (!scheduleList) return;
+
+        const schedules = getSchedules();
+
+        if (!schedules.length) {
+            scheduleList.innerHTML = `
+                <div class="empty-state">
+                    <h3>No schedule added yet</h3>
+                    <p>Add your classes to organize your week.</p>
+                </div>
+            `;
+            return;
+        }
+
+        scheduleList.innerHTML = schedules.map(function (item) {
+            return `
+                <div class="schedule-item">
+                    <div class="schedule-details">
+                        <h3>${escapeHTML(item.subject)}</h3>
+                        <p>${escapeHTML(item.days.join(", "))}</p>
+                        <p>
+                            ${escapeHTML(formatTime(item.startTime))}
+                            - ${escapeHTML(formatTime(item.endTime))}
+                        </p>
+                        ${item.location ? `
+                            <p>${escapeHTML(item.location)}</p>
+                        ` : ""}
+                    </div>
+
+                    <div class="schedule-actions">
+                        <button
+                            type="button"
+                            data-edit-schedule="${escapeHTML(item.id)}"
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            type="button"
+                            data-delete-schedule="${escapeHTML(item.id)}"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function renderWeeklyTimetable() {
+        const timetable = document.querySelector(
+            "#weeklyTimetable, #weeklySchedule, #scheduleTable"
+        );
+
+        if (!timetable) return;
+
+        const schedules = getSchedules();
+
+        const sortedSchedules = schedules.slice().sort(function (a, b) {
+            return timeToMinutes(a.startTime) - timeToMinutes(b.startTime);
+        });
+
+        timetable.innerHTML = `
+            <div class="table-scroll">
+                <table class="data-table weekly-timetable">
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Subject</th>
+                            <th>Time</th>
+                            <th>Room / Location</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${WEEK_DAYS.map(function (day) {
+                            const daySchedules = sortedSchedules.filter(function (item) {
+                                return item.days.includes(day);
+                            });
+
+                            if (!daySchedules.length) {
+                                return `
+                                    <tr>
+                                        <td>${day}</td>
+                                        <td colspan="3">No classes scheduled</td>
+                                    </tr>
+                                `;
+                            }
+
+                            return daySchedules.map(function (item, index) {
+                                return `
+                                    <tr>
+                                        <td>${index === 0 ? day : ""}</td>
+                                        <td>${escapeHTML(item.subject)}</td>
+                                        <td>
+                                            ${escapeHTML(formatTime(item.startTime))}
+                                            -
+                                            ${escapeHTML(formatTime(item.endTime))}
+                                        </td>
+                                        <td>${escapeHTML(item.location || "-")}</td>
+                                    </tr>
+                                `;
+                            }).join("");
+                        }).join("")}
+                    </tbody>
+                </table>
+            </div>
+        `;
     }
 
     if (scheduleForm) {
         scheduleForm.addEventListener("submit", function (event) {
             event.preventDefault();
 
-            const subject = scheduleForm.elements.namedItem("subject").value.trim();
-            const day = scheduleForm.elements.namedItem("day").value;
-            const time = scheduleForm.elements.namedItem("time").value;
+            const success = saveScheduleFromForm(scheduleForm);
 
-            const schedule = getUserData("studyMateSchedule", []);
+            if (success) {
+                scheduleForm.reset();
+                updateSelectedDaysText();
 
-            schedule.push({ subject, day, time });
+                if (dayDropdownOptions) {
+                    dayDropdownOptions.hidden = true;
+                }
 
-            saveUserData("studyMateSchedule", schedule);
-            scheduleForm.reset();
-            displaySchedule();
+                alert(
+                    editingScheduleId
+                        ? "Schedule updated successfully!"
+                        : "Schedule added successfully!"
+                );
+
+                editingScheduleId = null;
+            }
         });
     }
 
-    displaySchedule();
+    if (scheduleList) {
+        scheduleList.addEventListener("click", function (event) {
+            const deleteButton = event.target.closest("[data-delete-schedule]");
+            const editButton = event.target.closest("[data-edit-schedule]");
 
-    // Quiz results
+            const schedules = getSchedules();
+
+            if (deleteButton) {
+                const id = deleteButton.dataset.deleteSchedule;
+
+                if (!confirm("Delete this schedule?")) return;
+
+                const updatedSchedules = schedules.filter(function (item) {
+                    return String(item.id) !== String(id);
+                });
+
+                saveSchedules(updatedSchedules);
+                renderSchedule();
+                renderWeeklyTimetable();
+            }
+
+            if (editButton) {
+                const id = editButton.dataset.editSchedule;
+
+                const item = schedules.find(function (schedule) {
+                    return String(schedule.id) === String(id);
+                });
+
+                if (!item || !scheduleForm) return;
+
+                editingScheduleId = item.id;
+
+                const subjectField = scheduleForm.elements.namedItem("subject");
+                const startField = scheduleForm.elements.namedItem("startTime") ||
+                    scheduleForm.elements.namedItem("time");
+
+                const endField = scheduleForm.elements.namedItem("endTime");
+
+                if (subjectField) subjectField.value = item.subject;
+                if (startField) startField.value = item.startTime;
+                if (endField) endField.value = item.endTime;
+
+                const locationField = scheduleForm.elements.namedItem("location") ||
+                    scheduleForm.elements.namedItem("room");
+
+                if (locationField) locationField.value = item.location || "";
+
+                scheduleForm.querySelectorAll(
+                    'input[name="day"], input[name="days"], input[name="scheduleDay"]'
+                ).forEach(function (checkbox) {
+                    checkbox.checked = item.days.includes(
+                        normalizeDay(checkbox.value)
+                    );
+                });
+
+                updateSelectedDaysText();
+
+                scheduleForm.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+            }
+        });
+
+        renderSchedule();
+    }
+
+    /* Subject schedule forms */
+
+    document.addEventListener("submit", function (event) {
+        const form = event.target.closest(
+            "form[data-subject-schedule]"
+        );
+
+        if (!form) return;
+
+        event.preventDefault();
+
+        const subject = form.dataset.subject ||
+            form.querySelector("[name='subject']")?.value.trim();
+
+        const success = saveScheduleFromForm(form, subject);
+
+        if (success) {
+            form.reset();
+            alert("Subject schedule added successfully!");
+        }
+    });
+
+    /* Schedule page initialization */
+
+    updateSelectedDaysText();
+    renderWeeklyTimetable();
+
+    /* Quiz */
+
     const quizForm = document.querySelector("#quizForm");
+
+    function getQuizQuestions() {
+        return getUserData("studyMateQuiz", []);
+    }
+
+    function renderQuiz() {
+        if (!quizForm) return;
+
+        const questions = getQuizQuestions();
+
+        if (!questions.length) {
+            quizForm.innerHTML = `
+                <div class="empty-state">
+                    <h3>No quiz available</h3>
+                    <p>Upload study materials to prepare for your quiz.</p>
+                </div>
+            `;
+            return;
+        }
+
+        quizForm.innerHTML = questions.map(function (question, index) {
+            return `
+                <div class="quiz-question">
+                    <h3>${index + 1}. ${escapeHTML(question.question)}</h3>
+
+                    <div class="quiz-options">
+                        ${(question.options || []).map(function (option, optionIndex) {
+                            return `
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="question-${index}"
+                                        value="${optionIndex}"
+                                        required
+                                    >
+                                    ${escapeHTML(option)}
+                                </label>
+                            `;
+                        }).join("")}
+                    </div>
+                </div>
+            `;
+        }).join("") + `
+            <button type="submit">Submit Quiz</button>
+        `;
+    }
 
     if (quizForm) {
         quizForm.addEventListener("submit", function (event) {
             event.preventDefault();
 
-            const questions = quizForm.querySelectorAll("[data-answer]");
+            const questions = getQuizQuestions();
+
+            if (!questions.length) return;
+
             let score = 0;
 
-            questions.forEach(question => {
-                const answer = quizForm.querySelector(
-                    `input[name="${question.dataset.name}"]:checked`
+            questions.forEach(function (question, index) {
+                const selected = quizForm.querySelector(
+                    'input[name="question-' + index + '"]:checked'
                 );
 
-                if (answer && answer.value === question.dataset.answer) {
+                if (
+                    selected &&
+                    Number(selected.value) === Number(question.correctAnswer)
+                ) {
                     score++;
                 }
             });
 
-            const results = getUserData("studyMateResults", []);
-
-            results.push({
+            const result = {
+                id: Date.now(),
                 score: score,
                 total: questions.length,
-                date: new Date().toLocaleString()
-            });
+                percentage: Math.round((score / questions.length) * 100),
+                date: new Date().toISOString()
+            };
 
+            const results = getUserData("studyMateResults", []);
+
+            results.push(result);
             saveUserData("studyMateResults", results);
 
-            location.href = "results.html";
+            alert(
+                "Quiz completed!\nYour score: " +
+                score + " out of " + questions.length
+            );
+
+            window.location.href = "results.html";
         });
     }
 
-    // Display latest quiz result
+    renderQuiz();
+
+    /* Results */
+
     const resultContent = document.querySelector("#resultContent");
 
-    if (resultContent) {
+    function renderResults() {
+        if (!resultContent) return;
+
         const results = getUserData("studyMateResults", []);
 
-        if (results.length === 0) {
+        if (!results.length) {
             resultContent.innerHTML = `
                 <div class="empty-state">
-                    <h2>No quiz results yet.</h2>
-                    <p>Complete a quiz first. Your score will appear here.</p>
-                    <a href="quiz.html" class="btn btn-primary">Take Quiz</a>
+                    <h3>No results yet</h3>
+                    <p>Complete a quiz to see your results here.</p>
                 </div>
             `;
-        } else {
-            const latest = results[results.length - 1];
-            const percentage = Math.round((latest.score / latest.total) * 100);
+            return;
+        }
 
-            resultContent.innerHTML = `
-                <div class="content-card result-card">
-                    <h2>Your Latest Result</h2>
-                    <h1>${latest.score} / ${latest.total}</h1>
-                    <p>${percentage}%</p>
-                    <p>${percentage >= 60 ? "Passed" : "Needs more practice"}</p>
-                    <small>Completed: ${escapeHTML(latest.date)}</small>
+        resultContent.innerHTML = results.slice().reverse().map(function (result) {
+            return `
+                <div class="result-card">
+                    <h3>Quiz Result</h3>
+
+                    <p>
+                        Score:
+                        <strong>
+                            ${escapeHTML(result.score)} /
+                            ${escapeHTML(result.total)}
+                        </strong>
+                    </p>
+
+                    <p>
+                        Percentage:
+                        <strong>${escapeHTML(result.percentage)}%</strong>
+                    </p>
+
+                    <small>
+                        ${escapeHTML(new Date(result.date).toLocaleString())}
+                    </small>
                 </div>
             `;
+        }).join("");
+    }
+
+    if (resultContent) {
+        renderResults();
+    }
+
+    /* Dashboard */
+
+    function updateDashboard() {
+        const files = getUserData("studyMateFiles", []);
+        const results = getUserData("studyMateResults", []);
+
+        const materialCount = document.querySelector("#materialCount");
+        const flashcardCount = document.querySelector("#flashcardCount");
+        const quizCount = document.querySelector("#quizCount");
+        const dashboardMaterials = document.querySelector("#dashboardMaterials");
+
+        if (materialCount) {
+            materialCount.textContent = files.length;
+        }
+
+        if (flashcardCount) {
+            const totalCards = files.reduce(function (total, file) {
+                return total +
+                    createFlashcardsFromText(file.content || "").length;
+            }, 0);
+
+            flashcardCount.textContent = totalCards;
+        }
+
+        if (quizCount) {
+            quizCount.textContent = results.length;
+        }
+
+        if (dashboardMaterials) {
+            if (!files.length) {
+                dashboardMaterials.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No study materials yet</h3>
+                        <p>Upload your first material to get started.</p>
+                    </div>
+                `;
+            } else {
+                dashboardMaterials.innerHTML = files.map(function (file) {
+                    return `
+                        <div class="dashboard-material">
+                            <h3>${escapeHTML(file.name)}</h3>
+                            <small>
+                                ${escapeHTML(
+                                    new Date(file.uploadedAt).toLocaleDateString()
+                                )}
+                            </small>
+                        </div>
+                    `;
+                }).join("");
+            }
         }
     }
-});
 
-// Prevent uploaded text from being treated as HTML
-function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, character => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-    })[character]);
-}
+    updateDashboard();
+
+    console.log("StudyMate loaded successfully.");
+
+});
